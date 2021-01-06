@@ -4,15 +4,40 @@ const Question = require("../model/question");
 var mongoose = require("mongoose");
 const verify = require("../routes/verifyToken");
 const { findById } = require("../model/user");
+const multer = require("multer");
 
-// router.get('/', verify, (req,res)=>{
-//     // res.json({posts :
-//     //     {
-//     //       title : 'my first post',
-//     //       description : 'Random data you should not have access to without being logged in'
-//     // }})
-//     res.send(req.user); // The user_id is accessible to all the routes that verify the token
-// });
+
+/** =================================== 
+ *             UPLOAD IMAGES 
+ * ======================================/
+ **/
+let storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, "../client/public/uploads/");
+  },
+  filename: (req, file, cb) => {
+      cb(null, `${Date.now()}_${file.originalname}`);
+  },
+  fileFilter: (req, file, cb) => {
+      const ext = path.extname(file.originalname)
+      if (ext !== '.jpg' && ext !== '.png' && ext !== '.mp4') {
+          return cb(res.status(400).end('only jpg, png, mp4 is allowed'), false);
+      }
+      cb(null, true)
+  }
+});
+
+const upload = multer({ storage: storage }).single("file");
+
+router.post("/uploadfiles", (req, res) => {
+    upload(req, res, err => {
+        if (err) {
+            return res.json({ success: false, err });
+        }
+        return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename });
+    });
+});
+
 
 /** to ask questions */
 router.post("/ask", verify, async (req, res) => {
@@ -29,7 +54,6 @@ router.post("/ask", verify, async (req, res) => {
 
   // const result = await User.find({}, null, { sort: { email: 1 }});
   const result = await User.findById(user_id);
-  console.log(result.username);
 
   const question = new Question({
     user: user_id,
@@ -47,12 +71,23 @@ router.post("/ask", verify, async (req, res) => {
 });
 /** to get all questions */
 router.get("/all", async (req, res) => {
-  try {
-    const questions = await Question.find();
-    res.json(questions);
-  } catch (err) {
-    res.status(500).send(err);
-  }
+
+  Question.find()
+        .populate("user")
+        .exec((err, questions) => {
+            if (err) return  res.status(500).send(err);
+            res.status(200).json(questions);
+            console.log(questions)
+        });
+
+
+
+  // try {
+  //   const questions = await Question.find();
+  //   res.json(questions);
+  // } catch (err) {
+  //   res.status(500).send(err);
+  // }
 });
 
 /** Displays the question by its id */
@@ -69,15 +104,27 @@ router.get("/all", async (req, res) => {
 // @desc        find a question by id
 // @access      public
 router.get("/:questionId", async (req, res) => {
-  try {
-    const question = await Question.findById(req.params.questionId);
-    if (!question) {
-      return res.status(404).json({ msg: "Question not found." });
-    }
-    res.send(question);
-  } catch (err) {
-    res.status(401).send({ nsg: err });
-  }
+  // try {
+  //   const question = await Question.findById();
+  //   if (!question) {
+  //     return res.status(404).json({ msg: "Question not found." });
+  //   }
+  //   res.send(question);
+  // } catch (err) {
+  //   res.status(401).send({ nsg: err });
+  // }
+  // console.log("Hello");
+ Question.findById({"_id": req.params.questionId})
+        .populate('user')
+        .exec((err, question) => {
+          if (!question) {
+                return res.status(404).json({ msg: "Question not found." });
+          }
+          if (err) return res.status(401).send({ nsg: err });
+            res.send(question);
+            console.log(question.user.username);
+        })
+        
 });
 
 // @route       POST api/questions/respond/:questionid
