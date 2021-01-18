@@ -82,18 +82,18 @@ const QuestionList = () => {
    
     <Fragment>
     
-      <div className="container-fluid ">
+      <div className="container-fluid">
       
         <div className='col-lg container'>
-        <div class="input-group md-form form-sm form-2 pl-0 head row">
-          <input
-            class="form-control my-0 py-1 red-border"
-            type="text"
-            placeholder="Search"
-            aria-label="Search"
-            placeholder="Search..."
-            onChange={(Event) => setSearchItem(Event.target.value)}
-          />
+          <div class="input-group md-form form-sm form-2 pl-0 head row">
+            <input
+              class="form-control my-0 py-1 red-border"
+              type="text"
+              placeholder="Search"
+              aria-label="Search"
+              placeholder="Search..."
+              onChange={(Event) => setSearchItem(Event.target.value)}
+            />
           <div class="input-group-append">
             {/* <span class="input-group-text red lighten-3" id="basic-text1">
               <i aria-hidden="true">
@@ -106,10 +106,10 @@ const QuestionList = () => {
 
         
           
-        <div className='row'>
+        <div className='row container'>
             <h1 className="title md">{filtredQuestions.length} Questions </h1>
         </div>
-        <div className='row'>
+        <div className='row container'>
           <div>
             <i  onClick={(e)=>questionsByFilter('newest')} className='btn btn-light active' >Newest</i>
             <i onClick={(e)=>questionsByFilter('answred')} className='btn btn-light'>Most liked</i>

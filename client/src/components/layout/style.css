@@ -142,9 +142,10 @@ color:rgb(255, 247, 247);
 
 .sidebar{
     
-    height: 100%;
+    height: 100vh;
     width: 150px;
-    background-color :rgb(241, 242, 243)
+    background-color :rgb(243, 243, 243);
+    
 }
 .sidebarlist{
     height: 100%;

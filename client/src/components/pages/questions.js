@@ -85,15 +85,16 @@ const Questions = () => {
 
   return (
    
-    <Fragment className="app">
-     <Router >
-      <SideBar/>
-       <Route path="/posts/all" exact component={QuestionList}/>
-       <Route path="/posts/all/tags" exact  component={TagList}/>
-       <Route path="/posts/all/users" exact component={UserList}/>
-
-       
-      </Router>
+    <Fragment>
+      <div className="page">
+        <Router >
+          <SideBar/>
+          <Route path="/posts/all" exact component={QuestionList}/>
+          <Route path="/posts/all/tags" exact  component={TagList}/>
+          <Route path="/posts/all/users" exact component={UserList}/>
+        </Router>
+      </div>
+     
     </Fragment>
   );
 };
