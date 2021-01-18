@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState, useContext } from "react";
+
 import axios from "axios";
 import QuestionItem from "../pages/QuestionItem";
 import Pagination from "./pagination";
@@ -8,8 +9,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { message } from "antd";
 import './pages.css'
 import SideBar from "../layout/SideBar";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import QuestionList from "./questionsList";
+import TagList from '../tags/TagList'
+import UserList from '../users/UserList'
 const inputstyle = {
   marginTop: "40px",
   width: "70vw",
@@ -33,19 +36,19 @@ const Questions = () => {
   const [active,setActive] = useState(false)
   const key = qsts;
 
-  useEffect(() => {
-    message.loading({ content: "Loading...", key });
-    axios
-      .get("/posts/all")
-      .then((res) => {
-        setQsts(res.data);
-        setfiltredQuestions(res.data)
-        setTimeout(() => {
-          message.success({ content: "Loaded!", key, duration: 1 });
-        }, 700);
-      })
-      .catch((err) => console.log(err));
-  }, []);
+  // useEffect(() => {
+  //   message.loading({ content: "Loading...", key });
+  //   axios
+  //     .get("/posts/all")
+  //     .then((res) => {
+  //       setQsts(res.data);
+  //       setfiltredQuestions(res.data)
+  //       setTimeout(() => {
+  //         message.success({ content: "Loaded!", key, duration: 1 });
+  //       }, 700);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, []);
 
   const questionsByFilter = (e)=>{
    if(e==='unanswred')
@@ -82,12 +85,15 @@ const Questions = () => {
 
   return (
    
-    <Fragment>
-      <div className='app'>
+    <Fragment className="app">
+     <Router >
       <SideBar/>
-     
-      </div>
-      
+       <Route path="/posts/all" exact component={QuestionList}/>
+       <Route path="/posts/all/tags" exact  component={TagList}/>
+       <Route path="/posts/all/users" exact component={UserList}/>
+
+       
+      </Router>
     </Fragment>
   );
 };

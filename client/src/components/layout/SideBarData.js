@@ -9,12 +9,12 @@ export const  SideBarData= [
     {
         title: 'Tags',
        
-        link: '/tags/all'
+        link: '/posts/all/tags'
     },
     {
         title: 'Users',
       
-        link: '/users/all'
+        link: '/posts/all/users'
     }
 ]
 
