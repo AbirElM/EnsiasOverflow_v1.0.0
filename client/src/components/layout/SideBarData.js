@@ -4,7 +4,9 @@ export const  SideBarData= [
     {
         title: 'HomePage',
         icon: <HomeIcon/>,
-        link: '/posts/all'
+        link: '/posts/all',
+      
+
     },
     {
         title: 'Tags',
@@ -15,6 +17,11 @@ export const  SideBarData= [
         title: 'Users',
       
         link: '/posts/all/users'
-    }
+    },
+    {
+        title: 'Users',
+      
+        link: '/posts/all/Users'
+    },
 ]
 
