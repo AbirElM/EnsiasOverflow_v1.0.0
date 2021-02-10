@@ -1,17 +1,41 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 @import '~antd/dist/antd.css';
 
-* {
+/* @include media-breakpoint-up(sm) {
+    html {
+      font-size: 1.2rem;
+    }
+  }
+  
+  @include media-breakpoint-up(md) {
+    html {
+      font-size: 1.4rem;
+    }
+  }
+  
+  @include media-breakpoint-up(lg) {
+    html {
+      font-size: 1.6rem;
+    }
+  } */
+
+body {
     margin : 0;
     padding: 0;
     box-sizing: border-box;
-    
+  
     font-family: 'Lato', sans-serif;
 }
-
+.app{
+  width: 100vw;
+  height: 100vh;
+  background-color :aqua
+}
 html {
     position: relative;
     min-height: 100%;
+    font-size: 1rem;
+
 }
 
 a {
@@ -38,9 +62,77 @@ a {
   }
 
 .margin{
-    margin: 0px 20px;
+    margin: 0px auto;
 }
 
 .ql-editor{
     min-height:300px;
+}
+
+.title{
+    color: rgb(10, 54, 105);
+}
+
+
+
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+}
+input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+}
+input[type=text] {
+  background-color: #f1f1f1;
+  width: 100%;
+}
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+}
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+}
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9;
+}
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+}
+
+.page{
+ 
+  display: flex;
+}
+
+.sidebar{
+    
+  height: 100%;
+  width: 150px;
+  background-color :rgb(111, 174, 236)
+}
+
+.qsts{
+  display: flex;
 }

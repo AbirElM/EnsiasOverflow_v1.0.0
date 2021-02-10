@@ -1,51 +1,41 @@
-import React, { useState, useContext } from "react";
-import { Fragment } from "react";
+import React, { useState, useContext, Fragment } from "react";
+
 import UserContext from "../../context/UserContext";
 import Axios from "axios";
 import ErrorNotice from "../misc/ErrorNotice";
 import SuccessNotice from "../misc/SuccessNotice";
 // import List from '@editorjs/list';
 import QuillEditor from "./editor/QuillEditor";
-import {message} from "antd"; 
+import { message } from "antd";
 
 export default function Post_question() {
+  const userData = useContext(UserContext);
 
-  
-  const userData = useContext(UserContext)
-
-  const onEditorChange = (value) =>
-  {
+  const onEditorChange = (value) => {
     setContent(value);
-  } 
+  };
   const onFilesChange = (files) => {
-    setFiles(files)
-}
-
-
+    setFiles(files);
+  };
   /** Successfully accessed userData */
   // console.log(userData.userData.token);
-  const [files, setFiles] = useState([])
+  const [files, setFiles] = useState([]);
   const [qst_title, setTitle] = useState();
   const [qst_content, setContent] = useState();
 
-  
   /** Error posting the question */
   const [error, setError] = useState();
 
   /** Successfully posted question */
   const [success, setSuccess] = useState();
 
-
   const submit = async (e) => {
     e.preventDefault();
     try {
       const token = userData.userData.token;
       if (token == undefined) {
-        message.error('You must be logged in to post a question.');
-
-        setTimeout(() => {
-           
-        }, 2500);
+        message.error("You must be logged in to post a question.");
+        setTimeout(() => {}, 2500);
       }
 
       const newQuestion = {
@@ -59,14 +49,12 @@ export default function Post_question() {
 
       if (postres) {
         // setSuccess("Question posted successfully !");
-        message.success('Post Created!');
+        message.success("Post Created!");
 
-                    setTimeout(() => {
-                       
-                    }, 2500);
+        setTimeout(() => {}, 2500);
       }
     } catch (err) {
-      err.response.data.msg && message.warning(err.response.data.msg); 
+      err.response.data.msg && message.warning(err.response.data.msg);
     }
   };
   return (
@@ -89,7 +77,6 @@ export default function Post_question() {
                   message={error}
                   clearError={() => setError(undefined)}
                 />
-                
               )}
               <label for="qst_title">Question title</label>
               <input
@@ -104,19 +91,18 @@ export default function Post_question() {
                 Keep it simple !
               </small>
             </div>
-           <div className="form-group">
+            <div className="form-group">
               <label for="">Content</label>
 
               <div id="ql-editor">
-                  <QuillEditor 
+                <QuillEditor
                   className="ql-editor"
-                    placeholder="Start Posting Something"
-                    onEditorChange={onEditorChange}
-                    onFilesChange={onFilesChange}
-                    // onFilesChange={onFilesChange}
-
-                  />
-                </div>
+                  placeholder="Start Posting Something"
+                  onEditorChange={onEditorChange}
+                  onFilesChange={onFilesChange}
+                  // onFilesChange={onFilesChange}
+                />
+              </div>
               {/* <textarea
                 type="text"
                 className="form-control full-width"
@@ -124,16 +110,11 @@ export default function Post_question() {
                 placeholder="Content of the question"
                 onChange={(e) => setContent(e.target.value)}
               /> */}
-              
-            </div> 
-           
+            </div>
+
             <button type="submit" className="btn btn-primary">
               Post
             </button>
-
-               
-            
-
           </form>
         </div>
       </div>

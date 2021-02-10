@@ -7,6 +7,24 @@ const { findById } = require("../model/user");
 const multer = require("multer");
 
 
+
+
+
+router.get("/all/users/:userid", async (req, res) => {
+  try {
+      const id = req.params.userid;
+      const user = await User.findById(id);
+      res.send(user)
+    
+  } catch (err) {
+    // console.error(err.message);
+    res.status(400).send(err.message);
+  }
+});
+
+module.exports = router;
+
+
 /** =================================== 
  *             UPLOAD IMAGES 
  * ======================================/
@@ -72,23 +90,24 @@ router.post("/ask", verify, async (req, res) => {
 /** to get all questions */
 router.get("/all", async (req, res) => {
 
-  Question.find()
+  await Question.find().sort({ asked_date: -1 })
         .populate("user")
         .exec((err, questions) => {
             if (err) return  res.status(500).send(err);
             res.status(200).json(questions);
-            console.log(questions)
+            
         });
-
-
-
-  // try {
-  //   const questions = await Question.find();
-  //   res.json(questions);
-  // } catch (err) {
-  //   res.status(500).send(err);
-  // }
+       
 });
+
+// router.get('/all/unanswred',async (req,res)=>{
+//   await Question.find().populate('user').exec((err,questions)=>{
+//         if (err) res.status(500).send(err)
+//         res.status(200).json(questions)
+//   }).filter(qst => qst.responses.length<0)
+//   console.log(questions.length)
+// })
+
 
 /** Displays the question by its id */
 // router.get("/all/qst", async (req, res) => {
