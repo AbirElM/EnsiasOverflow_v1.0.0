@@ -1,9 +1,9 @@
 import React from 'react'
-import HomeIcon from '@material-ui/icons/Home'
+// import HomeIcon from '@material-ui/icons/Home'
 export const  SideBarData= [
     {
         title: 'HomePage',
-        icon: <HomeIcon/>,
+        // icon: <HomeIcon/>,
         link: '/posts/all'
     },
     {

@@ -7,6 +7,24 @@ const { findById } = require("../model/user");
 const multer = require("multer");
 
 
+
+
+
+router.get("/all/users/:userid", async (req, res) => {
+  try {
+      const id = req.params.userid;
+      const user = await User.findById(id);
+      res.send(user)
+    
+  } catch (err) {
+    // console.error(err.message);
+    res.status(400).send(err.message);
+  }
+});
+
+module.exports = router;
+
+
 /** =================================== 
  *             UPLOAD IMAGES 
  * ======================================/

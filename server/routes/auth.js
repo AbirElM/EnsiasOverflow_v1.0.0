@@ -144,4 +144,16 @@ router.post("/login", async (req, res) => {
   }
 });
 
+// router.get("/me/:userid", async (req, res) => {
+//   try {
+//       const id = req.params.userid;
+//       const user = await User.findById(id);
+//       res.send(user)
+    
+//   } catch (err) {
+//     // console.error(err.message);
+//     res.status(400).send(err.message);
+//   }
+// });
+
 module.exports = router;
