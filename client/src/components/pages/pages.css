@@ -19,14 +19,18 @@
     }
   } */
 
-* {
+body {
     margin : 0;
     padding: 0;
     box-sizing: border-box;
-    
+  
     font-family: 'Lato', sans-serif;
 }
-
+.app{
+  width: 100vw;
+  height: 100vh;
+  background-color :aqua
+}
 html {
     position: relative;
     min-height: 100%;
@@ -115,4 +119,20 @@ input[type=submit] {
   /*when navigating through the items using the arrow keys:*/
   background-color: DodgerBlue !important;
   color: #ffffff;
+}
+
+.page{
+ 
+  display: flex;
+}
+
+.sidebar{
+    
+  height: 100%;
+  width: 150px;
+  background-color :rgb(111, 174, 236)
+}
+
+.qsts{
+  display: flex;
 }
