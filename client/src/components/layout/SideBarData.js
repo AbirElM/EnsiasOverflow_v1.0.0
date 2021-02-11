@@ -8,8 +8,6 @@ import {useState, useContext} from 'react';
 
 
 export const  SideBarData= [
-
-    
     {
         title: 'HomePage',
         icon: <HomeIcon/>,
