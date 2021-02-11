@@ -7,6 +7,24 @@ const { findById } = require("../model/user");
 const multer = require("multer");
 
 
+
+
+
+router.get("/all/users/:userid", async (req, res) => {
+  try {
+      const id = req.params.userid;
+      const user = await User.findById(id);
+      res.send(user)
+    
+  } catch (err) {
+    // console.error(err.message);
+    res.status(400).send(err.message);
+  }
+});
+
+module.exports = router;
+
+
 /** =================================== 
  *             UPLOAD IMAGES 
  * ======================================/
@@ -48,6 +66,7 @@ router.post("/ask", verify, async (req, res) => {
   let user_id = req.user;
   let title = req.body.qst_title;
   let content = req.body.qst_content;
+  let tags = req.body.tags
 
   if (!title || !content)
     return res.status(400).json({ msg: "Not all fields have been entered." });
@@ -60,6 +79,7 @@ router.post("/ask", verify, async (req, res) => {
     qst_title: title,
     username: result.username,
     qst_content: content,
+    qst_tags: tags
   });
 
   try {
@@ -478,5 +498,15 @@ router.put(
     }
   }
 );
+
+
+router.get('/questions/user/:id',verify,async (req,res)=>{
+    try{
+      const qsts = await Question.find({user  : req.params.id})
+      res.send(qsts)
+    }catch(err){
+      res.status(500).send(err)
+    }
+})
 
 module.exports = router;

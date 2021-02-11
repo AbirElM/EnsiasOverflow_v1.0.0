@@ -55,15 +55,15 @@ export default function App() {
 
     checkLoggedIn();
 
-    const getQuestions = async () => {
-      Axios.get("/posts/all")
-        .then((res) => {
-          setQuestionData(res.data);
-          console.log(res.data);
-        })
-        .catch((err) => console.log(err));
-    };
-    getQuestions();
+    // const getQuestions = async () => {
+    //   Axios.get("/posts/all")
+    //     .then((res) => {
+    //       setQuestionData(res.data);
+    //       console.log(res.data);
+    //     })
+    //     .catch((err) => console.log(err));
+    // };
+    // getQuestions();
   }, []);
 
   return (
@@ -80,6 +80,7 @@ export default function App() {
               <Route path="/posts/ask" component={Post_question} />
               <Route path="/posts/all" component={Questions} />
               <Route path="/posts/:id" component={Question} />
+
             </Switch>
           </QuestionContext.Provider>
         </UserContext.Provider>

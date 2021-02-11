@@ -16,11 +16,25 @@ const tagRoute = require('./routes/tags');
 
 // Connect to DataBase
 
-mongoose.connect(process.env.DB_CONNECT,
+// const MongoClient = require('mongodb').MongoClient;
+// const uri = "mongodb+srv://ilham:mongodb@73$@cluster0.2slfn.mongodb.net/ensiasoverflow?retryWrites=true&w=majority";
+// const client = new MongoClient(uri, { useNewUrlParser: true,useUnifiedTopology: true });
+// mongoose.connect(uri, 
+//     {   useNewUrlParser: true, 
+//             useUnifiedTopology: true},()=>{
+//             console.log('Connected to DB');
+        
+// });
+// mongoose.connection.on("error", function(error) {
+//     console.log(error)
+//   })
+  
+  // const uri = "mongodb+srv://ilham:mongodb@73$@cluster0.2slfn.mongodb.net/ensiasoverflow?retryWrites=true&w=majority";
+ mongoose.connect(process.env.DB_CONNECT,
 {   useNewUrlParser: true, 
     useUnifiedTopology: true},()=>{
     console.log('Connected to DB');
-})
+ })
 
 /**
  * Express .JSON

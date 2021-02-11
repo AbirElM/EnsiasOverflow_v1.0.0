@@ -5,50 +5,57 @@ import Axios from "axios";
 import ErrorNotice from "../misc/ErrorNotice";
 import SuccessNotice from "../misc/SuccessNotice";
 // import List from '@editorjs/list';
+import ChipInput from "material-ui-chip-input";
 import QuillEditor from "./editor/QuillEditor";
-import {message} from "antd"; 
-
+import { message } from "antd";
+import underscore from "underscore"
 export default function Post_question() {
+  const userData = useContext(UserContext);
 
-  
-  const userData = useContext(UserContext)
-
-  const onEditorChange = (value) =>
-  {
+  const onEditorChange = (value) => {
     setContent(value);
-  } 
+  };
   const onFilesChange = (files) => {
-    setFiles(files)
-}
-  /** Successfully accessed userData */
-  // console.log(userData.userData.token);
-  const [files, setFiles] = useState([])
+    setFiles(files);
+  };
+  
+  
+  const [files, setFiles] = useState([]);
   const [qst_title, setTitle] = useState();
   const [qst_content, setContent] = useState();
 
-  
-  /** Error posting the question */
+
   const [error, setError] = useState();
 
-  /** Successfully posted question */
+ 
   const [success, setSuccess] = useState();
+  const [tags,setTags]=useState()
 
+  // Add Chips
+  const handleAddChip = (chip) => {
+    
+    setTags(...tags,chip)
+  }
+  // Delete Chips
+  const handleDeleteChip = (chip) => {
+     setTags(
+        underscore.without(tags, chip)
+     );
+  }
 
   const submit = async (e) => {
     e.preventDefault();
     try {
       const token = userData.userData.token;
       if (token == undefined) {
-        message.error('You must be logged in to post a question.');
-
-        setTimeout(() => {
-           
-        }, 2500);
+        message.error("You must be logged in to post a question.");
+        setTimeout(() => {}, 2500);
       }
 
       const newQuestion = {
         qst_title,
         qst_content,
+        tags
       };
 
       const postres = await Axios.post("/posts/ask", newQuestion, {
@@ -57,14 +64,12 @@ export default function Post_question() {
 
       if (postres) {
         // setSuccess("Question posted successfully !");
-        message.success('Post Created!');
+        message.success("Post Created!");
 
-                    setTimeout(() => {
-                       
-                    }, 2500);
+        setTimeout(() => {}, 2500);
       }
     } catch (err) {
-      err.response.data.msg && message.warning(err.response.data.msg); 
+      err.response.data.msg && message.warning(err.response.data.msg);
     }
   };
   return (
@@ -87,7 +92,6 @@ export default function Post_question() {
                   message={error}
                   clearError={() => setError(undefined)}
                 />
-                
               )}
               <label for="qst_title">Question title</label>
               <input
@@ -102,18 +106,24 @@ export default function Post_question() {
                 Keep it simple !
               </small>
             </div>
-           <div className="form-group">
+            <ChipInput
+                label="IT Tags"
+                value={tags}
+                onAdd={(chip) => handleAddChip(chip)}
+                onDelete={(chip, index) => handleDeleteChip(chip, index)}
+            />
+            <div className="form-group">
               <label for="">Content</label>
 
               <div id="ql-editor">
-              <QuillEditor 
-              className="ql-editor"
-                placeholder="Start Posting Something"
-                onEditorChange={onEditorChange}
-                onFilesChange={onFilesChange}
-                // onFilesChange={onFilesChange}
-             />
-                </div>
+                <QuillEditor
+                  className="ql-editor"
+                  placeholder="Start Posting Something"
+                  onEditorChange={onEditorChange}
+                  onFilesChange={onFilesChange}
+                  // onFilesChange={onFilesChange}
+                />
+              </div>
               {/* <textarea
                 type="text"
                 className="form-control full-width"
@@ -121,16 +131,11 @@ export default function Post_question() {
                 placeholder="Content of the question"
                 onChange={(e) => setContent(e.target.value)}
               /> */}
-              
-            </div> 
-           
+            </div>
+
             <button type="submit" className="btn btn-primary">
               Post
             </button>
-
-               
-            
-
           </form>
         </div>
       </div>
