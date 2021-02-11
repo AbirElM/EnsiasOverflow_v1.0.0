@@ -59,6 +59,7 @@ router.post("/register", async (req, res) => {
     lname: req.body.lname,
     email: req.body.email,
     password: hashPassword,
+    pic: "",
   });
   try {
     /**Try adding new user to the database */
@@ -155,5 +156,26 @@ router.post("/login", async (req, res) => {
 //     res.status(400).send(err.message);
 //   }
 // });
+
+router.get('/users',verify,async (req,res)=>{
+  try{
+    const users = await User.find()
+    res.send(users)
+  }catch(err){
+    res.status(500).send({msg : err})
+  }
+})
+
+router.get('/userId/:id',verify,async (req,res)=>{
+  try{
+ 
+    const user = await User.findById(req.params.id)
+ 
+    if(!user) res.status(404).send("No user found")
+    res.send(user)
+  }catch(err){
+    res.status(500).send(err)
+  }
+})
 
 module.exports = router;

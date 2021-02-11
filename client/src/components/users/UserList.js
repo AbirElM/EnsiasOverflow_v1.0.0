@@ -1,23 +1,80 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 import profilepic from "../images/profile_pic.jpg";
 import axios from "axios";
-import {message} from 'antd';
+import Modal from "antd";
+import { message, avatar } from "antd";
+// import Avatar from "antd/lib/avatar/avatar";
+
 export default function UserList() {
   const userData = useContext(UserContext);
   const [userInfo, setUserInfo] = useState([]);
-
   const [email, setEmail] = useState();
   const [username, setUsername] = useState();
+  const [lname, setLn] = useState();
+  const [fname, setFn] = useState();
 
+  const [file, setFile] = useState('');
+  const [filename, setFilename] = useState('Choose File');
+  const [uploadedFile, setUploadedFile] = useState({});
+  const [msg, setMessage] = useState('');
+
+
+
+  const onChange = e => {
+    setFile(e.target.files[0]);
+    setFilename(e.target.files[0].name);
+    console.log(file);
+  };
+
+  const changePicture = async e => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const res = await axios.put('/posts/all/users/'+userId+'/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        // onUploadProgress: progressEvent => {
+        //   setUploadPercentage(
+        //     parseInt(
+        //       Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        //     )
+        //   );
+        //   // Clear percentage
+        //   setTimeout(() => setUploadPercentage(0), 10000);
+        // }
+      });
+
+      const { fileName, filePath } = res.data;
+      setUploadedFile({ fileName, filePath });
+      message.success("Profile updated successfully");
+
+      setMessage('File Uploaded');
+      console.log(message);
+    } catch (err) {
+      if (err.response.status === 500) {
+        setMessage('There was a problem with the server');
+      console.log(message);
+
+      } else {
+        setMessage(err.response.data.msg);
+      console.log(message);
+
+      }
+    }
+  }
   /**
    * Context UserID
    */
   const userId = userData.userData.user;
-
-  const getUser = () => {
-    axios
+  const currentUser = userData;
+  console.log(currentUser);
+  const getUser = async () => {
+       await axios
       .get("/posts/all/users/" + userId)
       .then((res) => {
         console.log(res.data);
@@ -31,28 +88,50 @@ export default function UserList() {
 
   useEffect(() => {
     getUser();
-  }, [userId]);
+  }, [userId, file]);
   console.log("User Id :" + userId);
 
+  //   setPic({pic: e.target.files[0]});
 
-  const submit = async(e) => {
-    //   e.preventDefault();
-    console.log("submitted");
+  const submit = async (e) => {
+    e.preventDefault();
+    const user = {
+      email,
+      username,
+      lname,
+      fname,
+    };
+    axios
+      .put("/posts/all/users/" + userId, user)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
-  }
+    message.success("Profile updated successfully");
+
+    //   history.push("/posts/all/users");
+
+    // console.log("submitted");
+  };
 
   // console.log(userData.userData.user);
 
   if (userInfo) {
     return (
+      
       <Container>
         <Row>
           <Col>
-            <Form className="form">
+            <Form className="form" onSubmit={changePicture}>
               <br></br>
               <br></br>
+              {/* <Avatar size={64} src={profilepic}>
+              </Avatar> */}
               <img
-                src={profilepic}
+                src={userInfo.pic}
                 alt="profils pic"
                 width="60%"
                 style={{
@@ -65,7 +144,8 @@ export default function UserList() {
                 {/* <Form.Label>Profile Image</Form.Label> */}
                 <Form.Control
                   type="file"
-                  name="profileImage"
+                  name="photo"
+                  accept=".png, .jpg, .jpeg"
                   style={{
                     borderRadius: "200px",
                     marginTop: "10%",
@@ -73,7 +153,21 @@ export default function UserList() {
                     display: "flex",
                     alignItems: "center",
                   }}
+                  onChange={(e) => onChange(e)}
                 />
+                <Button
+                  variant="secondary"
+                  type="submit"
+                  style={{
+                    borderRadius: "200px",
+                    marginLeft: "20%",
+                    textAlign: "center",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  Update your picture
+                </Button>
               </Form.Group>
             </Form>
             <Col>
@@ -81,35 +175,45 @@ export default function UserList() {
             </Col>
           </Col>
           <Col>
-            <h1>User Profile</h1>
-            <Form className="form">
+            <h1>{userInfo.username}</h1>
+            <Form className="form" onSubmit={submit}>
               <p> Check your profile, and update your info ! </p>
               <Form.Group controlId="formCategory1">
                 <Form.Label>Username</Form.Label>
-                <Form.Control type="text" defaultValue={userInfo.username}
-                onChange={(e) => setUsername(e.target.value)}
-                
-                 />
+                <Form.Control
+                  type="text"
+                  defaultValue={userInfo.username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
               </Form.Group>
               <Form.Group controlId="formCategory2">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" defaultValue={userInfo.email}
-                onChange={(e) => setEmail(e.target.value)}
-                
-                 />
+                <Form.Control
+                  type="email"
+                  defaultValue={userInfo.email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
               </Form.Group>
               <Form.Group controlId="formCategory2">
                 <Form.Label>First name</Form.Label>
-                <Form.Control type="text" defaultValue={userInfo.fname} 
-
+                <Form.Control
+                  type="text"
+                  defaultValue={userInfo.fname}
+                  onChange={(e) => setFn(e.target.value)}
                 />
               </Form.Group>
               <Form.Group controlId="formCategory2">
                 <Form.Label>Last name</Form.Label>
-                <Form.Control type="text" defaultValue={userInfo.lname} />
+                <Form.Control
+                  type="text"
+                  defaultValue={userInfo.lname}
+                  onChange={(e) => setLn(e.target.value)}
+                />
               </Form.Group>
 
-              <Button variant="primary" type="submit">Update your Profile</Button>
+              <Button variant="primary" type="submit">
+                Update your Profile
+              </Button>
             </Form>
           </Col>
         </Row>
