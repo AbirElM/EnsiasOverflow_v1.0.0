@@ -21,8 +21,8 @@ export default function App() {
   const getQuestion = () => {};
 
   const [questionData, setQuestionData] = useState();
-
-  useEffect(() => {}, [questionData]);
+  const[userInfo, setUserInfo] = useState({});
+  // useEffect(() => {}, [questionData]);
 
   const [userData, setUserData] = useState({
     token: undefined,
@@ -50,10 +50,17 @@ export default function App() {
           token,
           user: userRes.data,
         });
+
       }
+
+
+      
     };
 
+
     checkLoggedIn();
+  
+
 
     // const getQuestions = async () => {
     //   Axios.get("/posts/all")

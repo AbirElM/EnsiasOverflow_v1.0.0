@@ -1,6 +1,15 @@
 import React from 'react'
 // import HomeIcon from '@material-ui/icons/Home'
+import profilepic from "../images/profile_pic.jpg";
+import Avatar from "antd/lib/avatar/avatar";
+import Axios from 'axios';
+import {useState, useContext} from 'react';
+
+
+
 export const  SideBarData= [
+
+    
     {
         title: 'HomePage',
         // icon: <HomeIcon/>,
@@ -13,7 +22,7 @@ export const  SideBarData= [
     },
     {
         title: 'Users',
-      
+        icon: <Avatar src={profilepic} size='60' />,
         link: '/posts/all/users'
     }
 ]
