@@ -180,6 +180,7 @@ router.post("/ask", verify, async (req, res) => {
   let user_id = req.user;
   let title = req.body.qst_title;
   let content = req.body.qst_content;
+  let tags = req.body.tags
 
   if (!title || !content)
     return res.status(400).json({ msg: "Not all fields have been entered." });
@@ -192,6 +193,7 @@ router.post("/ask", verify, async (req, res) => {
     qst_title: title,
     username: result.username,
     qst_content: content,
+    qst_tags: tags
   });
 
   try {
@@ -255,7 +257,7 @@ router.get("/:questionId", async (req, res) => {
           }
           if (err) return res.status(401).send({ nsg: err });
             res.send(question);
-            console.log(question.user.username);
+            
         })
         
 });
@@ -266,22 +268,18 @@ router.get("/:questionId", async (req, res) => {
 router.post("/respond/:questionid", verify, async (req, res) => {
   try {
     const resp_user = await User.findById(req.user);
-    // console.log(); 
     const qst = await Question.findById(req.params.questionid);
-    
-    // console.log(user)
     const newResponse = {
       user: req.user,
       username: resp_user.username,
       rep_content: req.body.rep_content,
     };
-    console.log(newResponse);
     qst.responses.unshift(newResponse);
     await qst.save();
     res.json(newReponse);
   } catch (err) {
-    console.error("erre" + err.message);
-    //res.status(400).send('Server error.');
+   
+    res.status(400).send({msg : err});
   }
 });
 
@@ -303,11 +301,11 @@ router.delete("/:questionid", verify, async (req, res) => {
     await question.remove();
     res.json({ msg: "Question removed" });
   } catch (err) {
-    console.error(err.message);
+   
     if (err.kind == "ObjectId") {
       return res.status(404).json({ msg: "Post not found." });
     }
-    res.status(500).send("Server error.");
+    res.status(500).json({msg : err});
   }
 });
 
@@ -332,7 +330,6 @@ router.put("/:questionid", verify, async (req, res) => {
     await question.save();
     res.json({ msg: "question updated" });
   } catch (err) {
-    console.error(err.message);
     if (err.kind == "ObjectId") {
       /** Post not found ? */
       return res.status(404).json("post not found");
@@ -378,7 +375,7 @@ router.get("/reponses/:questionid", async (req, res) => {
     const question = await Question.findById(req.params.questionid);
     res.send(question.responses);
   } catch (err) {
-    console.error(err.message);
+   
     res.status(400).send("Server error.");
   }
 });
@@ -411,8 +408,7 @@ router.get("/reponses/:questionid", async (req, res) => {
 router.put("/like/:questionid", verify, async (req, res) => {
   try {
     const qst = await Question.findById(req.params.questionid);
-    // Object.assign(question,req.body)
-    // console.log(qst);
+   
     if (!qst) return res.send({ msg: "question not found" });
     
     if (
@@ -420,7 +416,7 @@ router.put("/like/:questionid", verify, async (req, res) => {
         .length > 0
     ) {
       const item = qst.qst_likes.filter((like) => like.user.toString() === req.user._id)
-      console.log(item)
+   
       qst.qst_likes.splice(item,1)
       //return res.status(400).json({ msg: "question already liked" });
     }
@@ -429,7 +425,7 @@ router.put("/like/:questionid", verify, async (req, res) => {
     await qst.save();
     res.json(qst);
   } catch (err) {
-    console.error("error"+err.message);
+  
     res.status(500).send(err);
   }
 });
@@ -459,7 +455,7 @@ router.put(
       res.json(response[0]);
      
     } catch (err) {
-      console.error(err.message);
+      
       res.status(500).send("Server error.");
     }
   }
@@ -482,20 +478,19 @@ router.put("/unlike/:questionid", verify, async (req, res) => {
    }
   
   const item = question.qst_likes.filter(like => like.user.toString() === req.user._id);
-  console.log("my item"+item)
+  
   if (
       item && question.qst_likes.filter((like) => like.user.toString() === req.user._id).length >0
    ) {
-       console.log('exist an item')
+       
       question.qst_likes.splice(item,1)
    }
  
   question.qst_dislikes.unshift({user : req.user._id})
-  console.log(question.qst_dislikes.length);
   await question.save()
   res.json(question.qst_dislikes.length)
   }catch(err){
-      console.error(err.message);
+     
       res.status(500).send('Server error.');
   }
 });
@@ -519,7 +514,7 @@ router.put(
       const response = question.responses.filter(
         (response) => response._id.toString() === req.params.responseid
       );
-      // console.log(response)
+     
       if (
         response[0].rep_likes.filter(
           (like) => like.user.toString() === req.user._id
@@ -530,13 +525,13 @@ router.put(
       .json({ msg: "Response already liked." });
         // return res.status(400).json({ msg: "response already liked" });
       }
-      console.log(response[0].rep_likes);
+    
       response[0].rep_likes.unshift({ user: req.user._id });
       await question.save();
       res.json(response[0]);
       // res.json(question.responses.rep_likes)
     } catch (err) {
-      console.error(err.message);
+   
       res.status(500).send("Server error.");
     }
   }
@@ -612,10 +607,20 @@ router.put(
       await question.save();
       res.json(response[0]);
     } catch (err) {
-      console.error(err.message);
+     
       res.status(500).send("Server error.");
     }
   }
 );
+
+
+router.get('/questions/user/:id',verify,async (req,res)=>{
+    try{
+      const qsts = await Question.find({user  : req.params.id})
+      res.send(qsts)
+    }catch(err){
+      res.status(500).send(err)
+    }
+})
 
 module.exports = router;

@@ -13,6 +13,9 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import QuestionList from "./questionsList";
 import TagList from '../tags/TagList'
 import UserList from '../users/UserList'
+import Question from '../Question/Question'
+import Users from '../ListUsers/Users'
+import UserDetail from "../ListUsers/UserDetail";
 const inputstyle = {
   marginTop: "40px",
   width: "70vw",
@@ -90,8 +93,12 @@ const Questions = () => {
         <Router >
           <SideBar/>
           <Route path="/posts/all" exact component={QuestionList}/>
+         
           <Route path="/posts/all/tags" exact  component={TagList}/>
           <Route path="/posts/all/users" exact component={UserList}/>
+          <Route path="/posts/all/question/:id" exact component={Question} />
+          <Route path="/posts/all/UserslList" exact component={Users} />
+          <Route path="/posts/all/UserslList/user/:id" exact component={UserDetail}/>
         </Router>
       </div>
      

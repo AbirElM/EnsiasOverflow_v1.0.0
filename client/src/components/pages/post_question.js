@@ -5,9 +5,10 @@ import Axios from "axios";
 import ErrorNotice from "../misc/ErrorNotice";
 import SuccessNotice from "../misc/SuccessNotice";
 // import List from '@editorjs/list';
+import ChipInput from "material-ui-chip-input";
 import QuillEditor from "./editor/QuillEditor";
 import { message } from "antd";
-
+import underscore from "underscore"
 export default function Post_question() {
   const userData = useContext(UserContext);
 
@@ -17,17 +18,30 @@ export default function Post_question() {
   const onFilesChange = (files) => {
     setFiles(files);
   };
-  /** Successfully accessed userData */
-  // console.log(userData.userData.token);
+  
+  
   const [files, setFiles] = useState([]);
   const [qst_title, setTitle] = useState();
   const [qst_content, setContent] = useState();
 
-  /** Error posting the question */
+
   const [error, setError] = useState();
 
-  /** Successfully posted question */
+ 
   const [success, setSuccess] = useState();
+  const [tags,setTags]=useState()
+
+  // Add Chips
+  const handleAddChip = (chip) => {
+    
+    setTags(...tags,chip)
+  }
+  // Delete Chips
+  const handleDeleteChip = (chip) => {
+     setTags(
+        underscore.without(tags, chip)
+     );
+  }
 
   const submit = async (e) => {
     e.preventDefault();
@@ -41,6 +55,7 @@ export default function Post_question() {
       const newQuestion = {
         qst_title,
         qst_content,
+        tags
       };
 
       const postres = await Axios.post("/posts/ask", newQuestion, {
@@ -91,6 +106,12 @@ export default function Post_question() {
                 Keep it simple !
               </small>
             </div>
+            <ChipInput
+                label="IT Tags"
+                value={tags}
+                onAdd={(chip) => handleAddChip(chip)}
+                onDelete={(chip, index) => handleDeleteChip(chip, index)}
+            />
             <div className="form-group">
               <label for="">Content</label>
 

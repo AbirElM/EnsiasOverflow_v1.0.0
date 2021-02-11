@@ -157,4 +157,25 @@ router.post("/login", async (req, res) => {
 //   }
 // });
 
+router.get('/users',verify,async (req,res)=>{
+  try{
+    const users = await User.find()
+    res.send(users)
+  }catch(err){
+    res.status(500).send({msg : err})
+  }
+})
+
+router.get('/userId/:id',verify,async (req,res)=>{
+  try{
+ 
+    const user = await User.findById(req.params.id)
+ 
+    if(!user) res.status(404).send("No user found")
+    res.send(user)
+  }catch(err){
+    res.status(500).send(err)
+  }
+})
+
 module.exports = router;

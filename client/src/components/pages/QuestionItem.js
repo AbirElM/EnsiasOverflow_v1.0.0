@@ -124,7 +124,7 @@ function QuestionItem({ qst }) {
               <i className="fa fa-thumbs-down"></i>{" "}
               {qst.qst_dislikes.length > 0 && <span> {dislike}</span>}
             </button> */}
-            <Link to={`/posts/${qst._id}`} 
+            <Link to={`/posts/all/question/${qst._id}`} 
             className="btn btn-outline-success margin"
            >
               View answers{" "}
