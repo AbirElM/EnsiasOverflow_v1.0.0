@@ -7,9 +7,11 @@ import axios from "axios";
 import Modal from "antd";
 import { message, avatar } from "antd";
 // import Avatar from "antd/lib/avatar/avatar";
+import Progress from './Progress';
 
 export default function UserList() {
   const userData = useContext(UserContext);
+
   const [userInfo, setUserInfo] = useState([]);
   const [email, setEmail] = useState();
   const [username, setUsername] = useState();
@@ -20,8 +22,9 @@ export default function UserList() {
   const [filename, setFilename] = useState('Choose File');
   const [uploadedFile, setUploadedFile] = useState({});
   const [msg, setMessage] = useState('');
+  const [uploadPercentage, setUploadPercentage] = useState(0);
 
-
+  const [pbvisible, setPbvisible] = useState();
 
   const onChange = e => {
     setFile(e.target.files[0]);
@@ -34,19 +37,22 @@ export default function UserList() {
     const formData = new FormData();
     formData.append('file', file);
     try {
+      setPbvisible("visible");
       const res = await axios.put('/posts/all/users/'+userId+'/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         },
-        // onUploadProgress: progressEvent => {
-        //   setUploadPercentage(
-        //     parseInt(
-        //       Math.round((progressEvent.loaded * 100) / progressEvent.total)
-        //     )
-        //   );
-        //   // Clear percentage
-        //   setTimeout(() => setUploadPercentage(0), 10000);
-        // }
+        onUploadProgress: progressEvent => {
+          setUploadPercentage(
+            parseInt(
+              Math.round((progressEvent.loaded * 100) / progressEvent.total)
+            )
+          );
+          // Clear percentage
+          setTimeout(() => setUploadPercentage(0), 5000);
+      setPbvisible("hidden");
+
+        }
       });
 
       const { fileName, filePath } = res.data;
@@ -94,7 +100,7 @@ export default function UserList() {
   //   setPic({pic: e.target.files[0]});
 
   const submit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     const user = {
       email,
       username,
@@ -155,6 +161,15 @@ export default function UserList() {
                   }}
                   onChange={(e) => onChange(e)}
                 />
+                <div className=' m-auto m mt-4 mb-4'
+                 style={{visibility: pbvisible ? 'visible' : 'hidden' }}
+                
+                >
+
+                <Progress percentage={uploadPercentage} 
+               />
+                </div>
+
                 <Button
                   variant="secondary"
                   type="submit"

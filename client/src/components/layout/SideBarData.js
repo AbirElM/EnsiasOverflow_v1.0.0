@@ -8,8 +8,6 @@ import {useState, useContext} from 'react';
 
 
 export const  SideBarData= [
-
-    
     {
         title: 'HomePage',
         // icon: <HomeIcon/>,
@@ -21,7 +19,7 @@ export const  SideBarData= [
         link: '/posts/all/tags'
     },
     {
-        title: 'Users',
+        title: 'Profile',
         icon: <Avatar src={profilepic} size='60' />,
         link: '/posts/all/users'
     }

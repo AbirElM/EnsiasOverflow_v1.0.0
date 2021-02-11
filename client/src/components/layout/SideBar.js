@@ -2,6 +2,7 @@ import React from 'react'
 import './style.css'
 import {SideBarData} from './SideBarData'
 function SideBar() {
+
     return (
         <div className='sidebar'>
             <ul className='sidebarlist'>
