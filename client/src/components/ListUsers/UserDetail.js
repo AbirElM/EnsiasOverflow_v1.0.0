@@ -52,10 +52,9 @@ function UserDetail({match}) {
         <div style={{backgroundSize: "70%"}} className="col-lg-12">
 
             <p style={{justifyContent:"center", justifyItems:"center"}}>Questiosn asked</p>
-            <div style={{ width: "100%",
-    height: "2px",
-    margin: "10px auto",
-    background:"grey"}}></div>
+            
+            <div style={{ width: "100%",height: "2px",margin: "10px auto",background:"grey"}}></div>
+            
             <div style={{ display: "flex",  flexWrap: "wrap",justifyContent: "center"}}>
            
                 {questions.map((value,key)=>(

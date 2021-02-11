@@ -16,15 +16,15 @@ function Users() {
     })
     if(users){
     return (
-        <div className="container">
+        <div className="container-fluid">
             {users.map((value,key)=>(
-                <div className="row">
-                    <div className='col-lg-12'>
-                    <UserItem user={value}/>
-                    </div>
-                </div>
-                  
+                <div style={{display: "flex",flexWrap: "wrap", justifyContent:"center"}} >
+                        <UserItem style={{maxWidth: "25%",
                 
+                    cursor:" pointer",
+                  
+                   }} user={value}/>
+                </div>
             ))}
         </div>
     )}else{

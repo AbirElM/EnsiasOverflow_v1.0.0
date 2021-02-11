@@ -34,6 +34,9 @@ const userSchema = new mongoose.Schema({
     date :{
         type : Date,
         default : Date.now
+    },
+    pic : {
+        type : String,
     }
 });
 
