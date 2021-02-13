@@ -5,24 +5,24 @@ import { Link } from 'react-router-dom';
 import Card from 'react-bootstrap/esm/Card';
 function UserItem(props) {
     return (
-        
-             <Card style={{
-             padding: "10px",
-             margin:"10px",
-             cursor:"pointer",
-             borderColor:'black'}}>
-                <div className="col-lg-2">
-                    <img src={img} className="img-fluid" />
-                </div>
-                <div>
-                    <Link to={`/posts/all/UserslList/user/${props.user._id}`} >
-                        <p>{props.user.fname} {props.user.lname}</p>
-                    </Link>
+        <div className="row">
             
-                </div>
-            
-        </Card>
-      
+                <Card style={{width:"100%", margin:"0 5px"}}>
+                    <div className="row">
+                        <div style={{width:"50%"}}>
+                            <img src={props.user.pic} className="img-fluid" style={{width:"80px", height:"80px"}} />
+                        </div>
+                        <div>
+                            <Link to={`/posts/all/UserslList/user/${props.user._id}`} >
+                                <Card.Text>{props.user.fname} {props.user.lname}</Card.Text>
+                                
+                            </Link>
+                            <Card.Text style={{fontSize:"10px"}}>{props.user.username}</Card.Text>
+                        </div>
+                    </div>
+                </Card>
+           
+        </div>
        
     )
 }

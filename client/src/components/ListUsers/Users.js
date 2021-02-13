@@ -16,16 +16,22 @@ function Users() {
     })
     if(users){
     return (
-        <div className="container-fluid">
-            {users.map((value,key)=>(
-                <div style={{display: "flex",flexWrap: "wrap", justifyContent:"center"}} >
-                        <UserItem style={{maxWidth: "25%",
-                
-                    cursor:" pointer",
-                  
-                   }} user={value}/>
+        <div className="container">
+             <div className="row">
+                <h4 style={{justifyContent:"center"}}>List of users</h4>
+            </div>
+            <div className="row">
+                <div style={{backgroundSize: "cover"}} className="col-lg-12">
+                    <div style={{ display: "flex",  flexWrap: "wrap",justifyContent: "center"}}>
+                        {users.map((value,key)=>(
+                            <div  style={{padding: "10px",margin:"10px",width:"25%",cursor:"pointer",borderColor:'black'}}>
+                                    <UserItem user={value}/>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            ))}
+            </div>
+          
         </div>
     )}else{
         return(
