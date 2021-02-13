@@ -20,6 +20,7 @@ export default function Options() {
       user: undefined,
     });
     localStorage.setItem("auth-token", "");
+    History.push("/")
   };
 
   return (

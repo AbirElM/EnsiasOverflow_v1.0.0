@@ -27,19 +27,20 @@ function UserDetail({match}) {
     if(questions){
     return (
         <div className="container-fluid">
-            <div className="row center">
-                <div style={{ margin:"5px"}} >
-                    <Card style={{width: "70vh"}}>
+            <div className="row">
+                <div style={{ margin:"0 auto ", justifyContent:"center",alignItems:"center"}} >
+                    <Card style={{width: "70vh", justifyContent:"center", margin:"0px"}}>
                         <Card.Body>
                             <div className="row">
                                 <div className="col-lg-4">
-                                    <Card.Img src={img} style={{width: "100px", height:"100px"}}/>
+                                    <Card.Img src={user.pic} style={{width: "100px", height:"100px"}}/>
                                 </div>
                                 <div className="col-lg-8">
                                     <Card.Title>
                                             {user.fname} {user.lname}
                                     </Card.Title>
                                     <Card.Subtitle>{user.username}</Card.Subtitle>
+                                    <Card.Subtitle style={{margin :"2px 0", color:"green"}}>Total questions : {questions.length}</Card.Subtitle>
                                 </div>
                             </div>
                             
@@ -58,7 +59,7 @@ function UserDetail({match}) {
             <div style={{ display: "flex",  flexWrap: "wrap",justifyContent: "center"}}>
            
                 {questions.map((value,key)=>(
-                    <Card style={{Width: "25%",
+                    <Card style={{width: "25%",
                     padding: "10px",
                     cursor:" pointer",
                     margin:"5px",
@@ -68,7 +69,7 @@ function UserDetail({match}) {
                         <Card.Body>
                             <Card.Text>{(value.qst_likes).lenght}</Card.Text>
                             <Card.Text>{value.qst_title}</Card.Text>
-                            <Card.Text style={{color:"green"}}>{value.asked_date.substring(0, 10)}</Card.Text>
+                            <Card.Text style={{color:"green"}}>Asked on :{value.asked_date.substring(0, 10)}</Card.Text>
                         </Card.Body>
                         
                     </Card>
