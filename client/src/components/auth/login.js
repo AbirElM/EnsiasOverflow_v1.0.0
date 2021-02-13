@@ -15,7 +15,6 @@ export default function Login() {
 
   const submit = async (e) => {
     e.preventDefault();
-    console.log("submitted");
     try {
       const loginUser = { email, password };
       //* Here we call an instance of the server route that will proceed the request of type post

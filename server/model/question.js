@@ -78,6 +78,17 @@ const QuestionSchema = new mongoose.Schema({
       },
     },
   ],
+  tags:[
+    {
+      tag:{
+        
+          type: String,
+          required: true
+
+        
+      }
+    }
+  ],
   asked_date: {
     default: Date.now,
     type: Date,
