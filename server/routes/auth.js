@@ -59,7 +59,7 @@ router.post("/register", async (req, res) => {
     lname: req.body.lname,
     email: req.body.email,
     password: hashPassword,
-    pic: "",
+    pic: "http://localhost:3000/uploads/profile/avatar.png",
   });
   try {
     /**Try adding new user to the database */

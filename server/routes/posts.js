@@ -573,7 +573,6 @@ router.put(
   }
 );
 
-
 router.get('/questions/user/:id',verify,async (req,res)=>{
     try{
       const qsts = await Question.find({user  : req.params.id})

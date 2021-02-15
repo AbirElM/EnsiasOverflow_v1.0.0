@@ -93,7 +93,6 @@ const Questions = () => {
         <Router >
           <SideBar/>
           <Route path="/posts/all" exact component={QuestionList}/>
-         
           <Route path="/posts/all/tags" exact  component={TagList}/>
           <Route path="/posts/all/users" exact component={UserList}/>
           <Route path="/posts/all/question/:id" exact component={Question} />
