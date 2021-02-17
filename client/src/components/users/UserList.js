@@ -7,7 +7,7 @@ import axios from "axios";
 import Modal from "antd";
 import { message, avatar } from "antd";
 // import Avatar from "antd/lib/avatar/avatar";
-import Progress from './Progress';
+import Progress from "./Progress";
 
 export default function UserList() {
   const userData = useContext(UserContext);
@@ -18,61 +18,62 @@ export default function UserList() {
   const [lname, setLn] = useState();
   const [fname, setFn] = useState();
 
-  const [file, setFile] = useState('');
-  const [filename, setFilename] = useState('Choose File');
+  const [file, setFile] = useState("");
+  const [filename, setFilename] = useState("Choose File");
   const [uploadedFile, setUploadedFile] = useState({});
-  const [msg, setMessage] = useState('');
+  const [msg, setMessage] = useState("");
   const [uploadPercentage, setUploadPercentage] = useState(0);
 
   const [pbvisible, setPbvisible] = useState();
 
-  const onChange = e => {
+  const onChange = (e) => {
     setFile(e.target.files[0]);
     setFilename(e.target.files[0].name);
     console.log(file);
   };
 
-  const changePicture = async e => {
+  const changePicture = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append("file", file);
     try {
       setPbvisible("visible");
-      const res = await axios.put('/posts/all/users/'+userId+'/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
-        onUploadProgress: progressEvent => {
-          setUploadPercentage(
-            parseInt(
-              Math.round((progressEvent.loaded * 100) / progressEvent.total)
-            )
-          );
-          // Clear percentage
-          setTimeout(() => setUploadPercentage(0), 5000);
-      setPbvisible("hidden");
-
+      const res = await axios.put(
+        "/posts/all/users/" + userId + "/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          onUploadProgress: (progressEvent) => {
+            setUploadPercentage(
+              parseInt(
+                Math.round((progressEvent.loaded * 100) / progressEvent.total)
+              )
+            );
+            // Clear percentage
+            setTimeout(() => setUploadPercentage(0), 5000);
+            setPbvisible("hidden");
+          },
         }
-      });
+      );
 
       const { fileName, filePath } = res.data;
       setUploadedFile({ fileName, filePath });
       message.success("Profile updated successfully");
-      setMessage('File Uploaded');
+      setMessage("File Uploaded");
       console.log(message);
     } catch (err) {
       if (err.response.status === 500) {
-        setMessage('There was a problem with the server');
-      console.log(message);
-
+        setMessage("There was a problem with the server");
+        console.log(message);
       } else {
         setMessage(err.response.data.msg);
-      console.log(message);
-
+        console.log(message);
       }
       window.location.reload();
     }
-  }
+  };
   /**
    * Context UserID
    */
@@ -80,7 +81,7 @@ export default function UserList() {
   const currentUser = userData;
   console.log(currentUser);
   const getUser = async () => {
-       await axios
+    await axios
       .get("/posts/all/users/" + userId)
       .then((res) => {
         console.log(res.data);
@@ -127,7 +128,6 @@ export default function UserList() {
 
   if (userInfo) {
     return (
-      
       <Container>
         <Row>
           <Col>
@@ -161,13 +161,11 @@ export default function UserList() {
                   }}
                   onChange={(e) => onChange(e)}
                 />
-                <div className=' m-auto m mt-4 mb-4'
-                 style={{visibility: pbvisible ? 'visible' : 'hidden' }}
-                
+                <div
+                  className=" m-auto m mt-4 mb-4"
+                  style={{ visibility: pbvisible ? "visible" : "hidden" }}
                 >
-
-                <Progress percentage={uploadPercentage} 
-               />
+                  <Progress percentage={uploadPercentage} />
                 </div>
 
                 <Button

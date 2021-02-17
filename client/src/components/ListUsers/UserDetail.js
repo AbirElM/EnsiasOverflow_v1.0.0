@@ -1,14 +1,67 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import axios from "axios";
+import UserContext from "../../context/UserContext";
+import { Typography } from "antd";
 import Card from "react-bootstrap/Card";
+import { makeStyles } from "@material-ui/core/styles";
 import { Container, Button } from "react-bootstrap";
-
+import Modal from "react-bootstrap/Modal";
+import { message } from "antd";
 import img from "../images/avatar.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 function UserDetail({ match }) {
+  const useStyles = makeStyles({
+    root: {
+      maxWidth: 345,
+    },
+    media: {
+      height: 140,
+    },
+  });
+
+  const classes = useStyles();
+
   const [questions, setQuestions] = useState();
   const [user, setUser] = useState();
-  console.log(match.params.id);
+
+  const userData = useContext(UserContext);
+
+  console.log(userData.userData.user);
+
+  //   console.log(match.params.id);
+
+  const { Title } = Typography;
+
+  /**
+   * Modal Card ----
+   */
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  const del_qst = async (e,qst_id) => {
+    e.preventDefault();
+    try {
+      const res = await axios.delete(
+        "/posts/questions/user/" + userData.userData.user + "/" + qst_id,
+        {
+          headers: {
+            "auth-token": userData.userData.token,
+          },
+
+        },
+      );
+      console.log(res);
+      setShow(false);
+      message.success("Successfully deleted !");
+      setTimeout(() => {}, 2000);
+      window.location.reload();
+
+    } catch (error) {
+        message.error(error);
+    }
+  };
 
   useEffect(async () => {
     try {
@@ -28,7 +81,7 @@ function UserDetail({ match }) {
         )
         .then((res) => {
           setQuestions(res.data);
-          console.log(res.data);
+          //   console.log(res.data);
         })
         .catch((err) => console.log(err));
     } catch (err) {
@@ -47,7 +100,12 @@ function UserDetail({ match }) {
             }}
           >
             <Card
-              style={{ width: "70vh", justifyContent: "center", margin: "0px" }}
+              style={{
+                width: "70vh",
+                justifyContent: "center",
+                margin: "15px",
+              }}
+              className={classes.root}
             >
               <Card.Body>
                 <div className="row">
@@ -63,7 +121,8 @@ function UserDetail({ match }) {
                     </Card.Title>
                     <Card.Subtitle>{user.username}</Card.Subtitle>
                     <Card.Subtitle style={{ margin: "2px 0", color: "green" }}>
-                      Total questions : {questions.length}
+                      Total questions :
+                      <Title level={2}>{questions.length}</Title> questions
                     </Card.Subtitle>
                   </div>
                 </div>
@@ -74,7 +133,7 @@ function UserDetail({ match }) {
         <div className="row">
           <div style={{ backgroundSize: "70%" }} className="col-lg-12">
             <p style={{ justifyContent: "center", justifyItems: "center" }}>
-              Questiosn asked
+              <Title level={2}>Questions asked </Title>
             </p>
 
             <div
@@ -105,21 +164,53 @@ function UserDetail({ match }) {
                     borderColor: "black",
                   }}
                 >
+                  {/* 
+            _______ Model Changes_____ */}
+                  <>
+                    <Modal show={show} onHide={handleClose} animation={false}>
+                      <Modal.Body>
+                        Are you sure you want to delete this post ?
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                          Cancel
+                        </Button>
+                        <Button variant="danger" 
+                        // onChange={(e) => onChange(e)}
+                        onClick={(e)=> del_qst(e,value._id)}>
+                          Delete
+                        </Button>
+                      </Modal.Footer>
+                    </Modal>
+                  </>
+
                   <Card.Body>
+                    <Card.Text> {value._id}</Card.Text>
                     <Card.Text>{value.qst_likes.lenght}</Card.Text>
                     <Card.Text>{value.qst_title}</Card.Text>
 
                     <Card.Text style={{ color: "green" }}>
                       Asked on :{value.asked_date.substring(0, 10)}
                     </Card.Text>
-                    <Button className="btn-danger ml-1" value="Delete">
-                      {" "}
-                      Delete
-                    </Button>
-                    <Button className="btn-info ml-1" value="Edit">
-                      {" "}
-                      Edit
-                    </Button>
+
+                    {userData.userData.user == match.params.id ? (
+                      <>
+                        <Button
+                          className="btn-danger ml-1"
+                          value="Delete"
+                          onClick={handleShow}
+                        >
+                          {" "}
+                          Delete
+                        </Button>
+                        <Button className="btn-info ml-1" value="Edit">
+                          {" "}
+                          Edit
+                        </Button>
+                      </>
+                    ) : (
+                      <></>
+                    )}
                   </Card.Body>
                 </Card>
               ))}

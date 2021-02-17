@@ -29,7 +29,6 @@ export default function Post_question() {
   const [tags, setTags] = useState([]);
   const [newtag, setNewtag] = useState([]);
 
-  
   // Add Chips
   const handleAddChip = (chip) => {
     // setTags(tags,chip);
@@ -45,7 +44,7 @@ export default function Post_question() {
   };
 
   const submit = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     try {
       const token = userData.userData.token;
       if (token == undefined) {
