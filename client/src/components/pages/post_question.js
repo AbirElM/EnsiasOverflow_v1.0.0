@@ -29,12 +29,11 @@ export default function Post_question() {
   const [tags, setTags] = useState([]);
   const [newtag, setNewtag] = useState([]);
 
-  // ["",""]
-
+  
   // Add Chips
   const handleAddChip = (chip) => {
     // setTags(tags,chip);
-    // setTags((tags) => [...tags, chip]);
+    setTags((tags) => [...tags, chip]);
     const obj = {tag: chip}
     setNewtag(newtag.concat(obj));
     // console.log(chip);
