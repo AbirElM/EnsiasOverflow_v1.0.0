@@ -1,21 +1,20 @@
 const router = require("express").Router();
-const express = require('express');
+const express = require("express");
 const User = require("../model/user");
 const Question = require("../model/question");
 var mongoose = require("mongoose");
 const verify = require("../routes/verifyToken");
 const { findById } = require("../model/user");
 const multer = require("multer");
-const fileUpload = require('express-fileupload');
+const fileUpload = require("express-fileupload");
 const app = express();
-const cors = require('cors');
-
-      
+const cors = require("cors");
+const question = require("../model/question");
 
 /**
- * 
+ *
  * User Profile
- * 
+ *
  */
 router.put("/all/users/:userid", async (req, res) => {
   try {
@@ -34,102 +33,93 @@ router.put("/all/users/:userid", async (req, res) => {
   }
 });
 
-
 router.get("/all/users/:userid", async (req, res) => {
   try {
-      const id = req.params.userid;
-      const user = await User.findById(id);
-      res.send(user)
-    
+    const id = req.params.userid;
+    const user = await User.findById(id);
+    res.send(user);
   } catch (err) {
     // console.error(err.message);
     res.status(400).send(err.message);
   }
 });
 
-  /**
-         * 
-         * Profile Image Update
-         */
+/**
+ *
+ * Profile Image Update
+ */
 
-        app.use(cors())
+app.use(cors());
 
-        var storage = multer.diskStorage({
-          destination: function (req, file, cb) {
-          cb(null, "../client/public/uploads/profile/")
-        },
-        filename: function (req, file, cb) {
-          cb(null, file.originalname )
-        }
-        })
-        
-        
-        var upload = multer({ storage: storage }).single('file')
-        router.put('/all/users/:userid/upload',async function(req, res) {
-          
-          // console.log(pic_url);
-          upload(req, res, async function (err) {
-          const user = await User.findById(req.params.userid);
-          if (!user) return res.json({ msg: "user no found" });
-          const pic_url ="http://localhost:3000/uploads/profile/" + res.req.file.filename;
-          // user.findByIdAndUpdate(req.params.userid, {pic : pic_url});
-          Object.assign(user, {pic : pic_url});
-        
-          await user.save();
-         
-          // Object.assign(user, pic_url);
-          // user.pic = pic_url;
-          console.log(pic_url);
-          
-                 if (err instanceof multer.MulterError) {
-                     return res.status(500).json(err)
-                 } else if (err) {
-                     return res.status(500).json(err)
-                 }
-            return res.status(200).send(req.file)
-        
-          })
-        
-        });
-        
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "../client/public/uploads/profile/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
 
-        
+var upload = multer({ storage: storage }).single("file");
+router.put("/all/users/:userid/upload", async function (req, res) {
+  // console.log(pic_url);
+  upload(req, res, async function (err) {
+    const user = await User.findById(req.params.userid);
+    if (!user) return res.json({ msg: "user no found" });
+    const pic_url =
+      "http://localhost:3000/uploads/profile/" + res.req.file.filename;
+    // user.findByIdAndUpdate(req.params.userid, {pic : pic_url});
+    Object.assign(user, { pic: pic_url });
 
+    await user.save();
 
+    // Object.assign(user, pic_url);
+    // user.pic = pic_url;
+    console.log(pic_url);
 
-/** =================================== 
- *             UPLOAD IMAGES 
+    if (err instanceof multer.MulterError) {
+      return res.status(500).json(err);
+    } else if (err) {
+      return res.status(500).json(err);
+    }
+    return res.status(200).send(req.file);
+  });
+});
+
+/** ===================================
+ *             UPLOAD IMAGES
  * ======================================/
  **/
 let stor = multer.diskStorage({
   destination: (req, file, cb) => {
-      cb(null, "../client/public/uploads/");
+    cb(null, "../client/public/uploads/");
   },
   filename: (req, file, cb) => {
-      cb(null, `${Date.now()}_${file.originalname}`);
+    cb(null, `${Date.now()}_${file.originalname}`);
   },
   fileFilter: (req, file, cb) => {
-      const ext = path.extname(file.originalname)
-      if (ext !== '.jpg' && ext !== '.png' && ext !== '.mp4') {
-          return cb(res.status(400).end('only jpg, png, mp4 is allowed'), false);
-      }
-      cb(null, true)
-  }
+    const ext = path.extname(file.originalname);
+    if (ext !== ".jpg" && ext !== ".png" && ext !== ".mp4") {
+      return cb(res.status(400).end("only jpg, png, mp4 is allowed"), false);
+    }
+    cb(null, true);
+  },
 });
 
 const upl = multer({ storage: stor }).single("file");
 
 router.post("/uploadfiles", (req, res) => {
-    upl(req, res, err => {
-        if (err) {
-            return res.json({ success: false, err });
-        }
-        return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename });
+  upl(req, res, (err) => {
+    if (err) {
+      return res.json({ success: false, err });
+    }
+    return res.json({
+      success: true,
+      url: res.req.file.path,
+      fileName: res.req.file.filename,
     });
+  });
 });
-
-
-
 
 /** to ask questions */
 router.post("/ask", verify, async (req, res) => {
@@ -167,14 +157,13 @@ router.post("/ask", verify, async (req, res) => {
 });
 /** to get all questions */
 router.get("/all", async (req, res) => {
-
-  await Question.find().sort({ asked_date: -1 })
-        .populate("user")
-        .exec((err, questions) => {
-            if (err) return  res.status(500).send(err);
-            res.status(200).json(questions);            
-        });
-       
+  await Question.find()
+    .sort({ asked_date: -1 })
+    .populate("user")
+    .exec((err, questions) => {
+      if (err) return res.status(500).send(err);
+      res.status(200).json(questions);
+    });
 });
 
 // router.get('/all/unanswred',async (req,res)=>{
@@ -184,7 +173,6 @@ router.get("/all", async (req, res) => {
 //   }).filter(qst => qst.responses.length<0)
 //   console.log(questions.length)
 // })
-
 
 /** Displays the question by its id */
 // router.get("/all/qst", async (req, res) => {
@@ -210,17 +198,15 @@ router.get("/:questionId", async (req, res) => {
   //   res.status(401).send({ nsg: err });
   // }
   // console.log("Hello");
- Question.findById({"_id": req.params.questionId})
-        .populate('user')
-        .exec((err, question) => {
-          if (!question) {
-                return res.status(404).json({ msg: "Question not found." });
-          }
-          if (err) return res.status(401).send({ nsg: err });
-            res.send(question);
-            
-        })
-        
+  Question.findById({ _id: req.params.questionId })
+    .populate("user")
+    .exec((err, question) => {
+      if (!question) {
+        return res.status(404).json({ msg: "Question not found." });
+      }
+      if (err) return res.status(401).send({ nsg: err });
+      res.send(question);
+    });
 });
 
 // @route       POST api/questions/respond/:questionid
@@ -239,8 +225,7 @@ router.post("/respond/:questionid", verify, async (req, res) => {
     await qst.save();
     res.json(newReponse);
   } catch (err) {
-   
-    res.status(400).send({msg : err});
+    res.status(400).send({ msg: err });
   }
 });
 
@@ -262,11 +247,10 @@ router.delete("/:questionid", verify, async (req, res) => {
     await question.remove();
     res.json({ msg: "Question removed" });
   } catch (err) {
-   
     if (err.kind == "ObjectId") {
       return res.status(404).json({ msg: "Post not found." });
     }
-    res.status(500).json({msg : err});
+    res.status(500).json({ msg: err });
   }
 });
 
@@ -336,7 +320,6 @@ router.get("/reponses/:questionid", async (req, res) => {
     const question = await Question.findById(req.params.questionid);
     res.send(question.responses);
   } catch (err) {
-   
     res.status(400).send("Server error.");
   }
 });
@@ -369,24 +352,24 @@ router.get("/reponses/:questionid", async (req, res) => {
 router.put("/like/:questionid", verify, async (req, res) => {
   try {
     const qst = await Question.findById(req.params.questionid);
-   
+
     if (!qst) return res.send({ msg: "question not found" });
-    
+
     if (
       qst.qst_likes.filter((like) => like.user.toString() === req.user._id)
         .length > 0
     ) {
-      const item = qst.qst_likes.filter((like) => like.user.toString() === req.user._id)
-   
-      qst.qst_likes.splice(item,1)
+      const item = qst.qst_likes.filter(
+        (like) => like.user.toString() === req.user._id
+      );
+
+      qst.qst_likes.splice(item, 1);
       //return res.status(400).json({ msg: "question already liked" });
-    }
-    else qst.qst_likes.unshift({ user: req.user._id });
+    } else qst.qst_likes.unshift({ user: req.user._id });
 
     await qst.save();
     res.json(qst);
   } catch (err) {
-  
     res.status(500).send(err);
   }
 });
@@ -404,60 +387,60 @@ router.put(
       );
 
       if (
-        response[0].rep_likes.filter(like => like.user.toString() === req.user._id).length > 0
+        response[0].rep_likes.filter(
+          (like) => like.user.toString() === req.user._id
+        ).length > 0
       ) {
-        const item = response[0].rep_likes.filter((like) => like.user.toString() === req.user._id)
-        response[0].rep_likes.splice(item[0],1)
-
-      }else{
+        const item = response[0].rep_likes.filter(
+          (like) => like.user.toString() === req.user._id
+        );
+        response[0].rep_likes.splice(item[0], 1);
+      } else {
         response[0].rep_likes.unshift({ user: req.user._id });
       }
       await question.save();
       res.json(response[0]);
-     
     } catch (err) {
-      
       res.status(500).send("Server error.");
     }
   }
 );
 
-
 // @route       PUT api/questions/like/:questionid
 // @desc        unlike a question
 // @access      Private
 router.put("/unlike/:questionid", verify, async (req, res) => {
-  try{
-  const question = await Question.findById(req.params.questionid);
-  if (!question) return res.send({ msg: "question not found" });
-  
-  if (
-      question.qst_dislikes.filter((like) => like.user.toString() === req.user._id)
-       .length > 0
-   ) {
-     return res.status(400).json({ msg: "question already disliked " });
-   }
-  
-  const item = question.qst_likes.filter(like => like.user.toString() === req.user._id);
-  
-  if (
-      item && question.qst_likes.filter((like) => like.user.toString() === req.user._id).length >0
-   ) {
-       
-      question.qst_likes.splice(item,1)
-   }
- 
-  question.qst_dislikes.unshift({user : req.user._id})
-  await question.save()
-  res.json(question.qst_dislikes.length)
-  }catch(err){
-     
-      res.status(500).send('Server error.');
+  try {
+    const question = await Question.findById(req.params.questionid);
+    if (!question) return res.send({ msg: "question not found" });
+
+    if (
+      question.qst_dislikes.filter(
+        (like) => like.user.toString() === req.user._id
+      ).length > 0
+    ) {
+      return res.status(400).json({ msg: "question already disliked " });
+    }
+
+    const item = question.qst_likes.filter(
+      (like) => like.user.toString() === req.user._id
+    );
+
+    if (
+      item &&
+      question.qst_likes.filter((like) => like.user.toString() === req.user._id)
+        .length > 0
+    ) {
+      question.qst_likes.splice(item, 1);
+    }
+
+    question.qst_dislikes.unshift({ user: req.user._id });
+    await question.save();
+    res.json(question.qst_dislikes.length);
+  } catch (err) {
+    res.status(500).send("Server error.");
   }
 });
-
-
-
 
 /**
  * Upvote a response to a question
@@ -475,24 +458,21 @@ router.put(
       const response = question.responses.filter(
         (response) => response._id.toString() === req.params.responseid
       );
-     
+
       if (
         response[0].rep_likes.filter(
           (like) => like.user.toString() === req.user._id
         ).length > 0
       ) {
-        return res
-      .status(400)
-      .json({ msg: "Response already liked." });
+        return res.status(400).json({ msg: "Response already liked." });
         // return res.status(400).json({ msg: "response already liked" });
       }
-    
+
       response[0].rep_likes.unshift({ user: req.user._id });
       await question.save();
       res.json(response[0]);
       // res.json(question.responses.rep_likes)
     } catch (err) {
-   
       res.status(500).send("Server error.");
     }
   }
@@ -568,19 +548,50 @@ router.put(
       await question.save();
       res.json(response[0]);
     } catch (err) {
-     
       res.status(500).send("Server error.");
     }
   }
 );
 
-router.get('/questions/user/:id',verify,async (req,res)=>{
-    try{
-      const qsts = await Question.find({user  : req.params.id})
-      res.send(qsts)
-    }catch(err){
-      res.status(500).send(err)
+/**
+ * desc : Get questions of specific user
+ */
+router.get("/questions/user/:id", verify, async (req, res) => {
+  try {
+    const qsts = await Question.find({ user: req.params.id });
+    res.send(qsts);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.delete(
+  "/questions/user/:userId/:questionId",
+  verify,
+  async (req, res) => {
+    // const qsts = await Question.find({user  : req.params.id});
+    const user_deleting = await User.findById(req.params.userId);
+    const user_deleting_id = JSON.stringify(user_deleting._id);
+    const questionId = req.params.questionId;
+    const question = await Question.findById(questionId);
+    const user_asking = JSON.stringify(question.user);
+    if (user_deleting_id == user_asking) {
+      try {
+        console.log("question: " + question + "\n User : " + question.user);
+        Question.findByIdAndRemove(questionId, (err) => {
+          if (err) return res.status(500).send(err);
+          const qst_del = {
+            message: "Question successfully deleted !",
+          };
+          res.send(qst_del);
+        });
+      } catch (error) {
+        res.status(500).send(err);
+      }
+    } else {
+      res.status(500).send("Trying to delete someone else's post ? Busted :) ");
     }
-})
+  }
+);
 
 module.exports = router;

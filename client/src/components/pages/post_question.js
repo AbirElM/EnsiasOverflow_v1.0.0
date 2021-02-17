@@ -29,7 +29,6 @@ export default function Post_question() {
   const [tags, setTags] = useState([]);
   const [newtag, setNewtag] = useState([]);
 
-  
   // Add Chips
   const handleAddChip = (chip) => {
     // setTags(tags,chip);

@@ -20,12 +20,11 @@ export default function Options() {
       user: undefined,
     });
     localStorage.setItem("auth-token", "");
-    History.push("/")
+    History.push("/");
   };
 
   return (
     <nav className="auth-options">
-   
       {userData.user ? (
         <>
           {/* We need to add the dynamic search bar  */}

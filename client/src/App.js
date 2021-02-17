@@ -21,7 +21,7 @@ export default function App() {
   const getQuestion = () => {};
 
   const [questionData, setQuestionData] = useState();
-  const[userInfo, setUserInfo] = useState({});
+  const [userInfo, setUserInfo] = useState({});
   // useEffect(() => {}, [questionData]);
 
   const [userData, setUserData] = useState({
@@ -50,17 +50,10 @@ export default function App() {
           token,
           user: userRes.data,
         });
-
       }
-
-
-      
     };
 
-
     checkLoggedIn();
-  
-
 
     // const getQuestions = async () => {
     //   Axios.get("/posts/all")
@@ -87,7 +80,6 @@ export default function App() {
               <Route path="/posts/ask" component={Post_question} />
               <Route path="/posts/all" component={Questions} />
               <Route path="/posts/:id" component={Question} />
-
             </Switch>
           </QuestionContext.Provider>
         </UserContext.Provider>
