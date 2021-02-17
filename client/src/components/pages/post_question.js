@@ -113,17 +113,9 @@ export default function Post_question() {
               onAdd={(chip) => handleAddChip(chip)}
               onDelete={(chip, index) => handleDeleteChip(chip, index)}
             />
-            <div>
-              {" "}
-              Tags :{" "}
-              <p>
-                {tags.map((tag) => (
-                  <li>{tag}</li>
-                ))}
-              </p>
-            </div>
+           
             <div className="form-group">
-              <label for="">Content</label>
+              <label for="" className="mt-3">Content</label>
 
               <div id="ql-editor">
                 <QuillEditor
