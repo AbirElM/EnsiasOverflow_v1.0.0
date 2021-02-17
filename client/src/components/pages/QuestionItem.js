@@ -92,8 +92,23 @@ function QuestionItem({ qst }) {
             {" "}
             Asked : {moment(qst.asked_date).fromNow()}
           </Card.Subtitle>
+        
+         
+
           <Card.Text>
             <div dangerouslySetInnerHTML={{ __html: qst.qst_content }}></div>
+          </Card.Text>
+
+          <Card.Text>
+            <div className="tag_chip">
+
+            <ul>
+                {qst.tags.map((tag) => (
+                  <li>{tag.tag}</li>
+                ))}
+            </ul>
+
+            </div>
           </Card.Text>
           <div className="ml-auto">
             <button
@@ -126,11 +141,7 @@ function QuestionItem({ qst }) {
                 <span className="comment-count">{qst.responses.length}</span>
               )}
             </Link>
-            <Button className="btn-danger ml-1" value="Delete">
-                {" "}
-                Delete
-              </Button>
-                 
+         
               <Button
                 className=" ml-1 "
                 value="Spam"

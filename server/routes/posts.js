@@ -140,8 +140,9 @@ router.post("/ask", verify, async (req, res) => {
   let user_id = req.user;
   let title = req.body.qst_title;
   let content = req.body.qst_content;
-  let tags = req.body.tags
+  let tags = await req.body.newtag;
 
+  // console.log(tags);
   if (!title || !content)
     return res.status(400).json({ msg: "Not all fields have been entered." });
 
@@ -153,12 +154,13 @@ router.post("/ask", verify, async (req, res) => {
     qst_title: title,
     username: result.username,
     qst_content: content,
-    qst_tags: tags
+    tags: tags,
   });
 
   try {
     const savedQuestion = await question.save();
     res.send({ question_id: question._id });
+    console.log(savedQuestion.tags);
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }
@@ -170,8 +172,7 @@ router.get("/all", async (req, res) => {
         .populate("user")
         .exec((err, questions) => {
             if (err) return  res.status(500).send(err);
-            res.status(200).json(questions);
-            
+            res.status(200).json(questions);            
         });
        
 });

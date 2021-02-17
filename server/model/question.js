@@ -5,12 +5,14 @@ const QuestionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
-  tags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "tag",
-    },
+ tags:[ 
+    { 
+          type: String,
+          required: true  ,
+            
+    }
   ],
+
   username: {
     type: String,
     required: "true",

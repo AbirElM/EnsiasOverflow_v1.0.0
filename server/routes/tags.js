@@ -27,15 +27,12 @@ router.post("/addtag", (req, res) => {
 });
 
 router.get("all",(req,res)=>{
-
     tag.find()
     .populate("user")
     .exec((err, questions) => {
         if (err) return  res.status(500).send(err);
-        res.status(200).json(questions);
-        
+        res.status(200).json(questions);        
     });
-
 })
 
 module.exports = router;
