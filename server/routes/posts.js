@@ -10,98 +10,11 @@ const fileUpload = require('express-fileupload');
 const app = express();
 const cors = require('cors');
 
-// var cors = require('cors');
-// app.use(cors())
-
-// app.use(fileUpload());
-// Upload Endpoint
-// app.post("/uploads", async (req, res) => {
-//   if (req.files === null) {
-//     return res.status(400).json({ msg: 'No file uploaded' });
-//   }
-//   console.log(req.query);
-//   const file = await req.file;
-//   file.mv(`${__dirname}/client/public/uploads/profile/${file.name}`, err => {
-//     if (err) {
-//       console.error(err);
-//       return res.status(500).send(err);
-//     }
-//     res.json({ fileName: file.name, filePath: `/uploads/profile/${file.name}` });
-//   });
-// });
-
-
-app.use(cors())
-
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-  cb(null, "../client/public/uploads/profile/")
-},
-filename: function (req, file, cb) {
-  cb(null, file.originalname )
-}
-})
-
-
-var upload = multer({ storage: storage }).single('file')
-router.put('/all/users/:userid/upload',async function(req, res) {
-  
-  // console.log(pic_url);
-  upload(req, res, async function (err) {
-  const user = await User.findById(req.params.userid);
-  if (!user) return res.json({ msg: "user no found" });
-  const pic_url ="http://localhost:3000/uploads/profile/" + res.req.file.filename;
-  // user.findByIdAndUpdate(req.params.userid, {pic : pic_url});
-  Object.assign(user, {pic : pic_url});
-
-  await user.save();
- 
-  // Object.assign(user, pic_url);
-  // user.pic = pic_url;
-  console.log(pic_url);
-  
-         if (err instanceof multer.MulterError) {
-             return res.status(500).json(err)
-         } else if (err) {
-             return res.status(500).json(err)
-         }
-    return res.status(200).send(req.file)
-
-  })
-
-});
-
-
-
-
-
-// const stor = multer.diskStorage({
-//   destination: function(req, file, cb) {
-//       cb(null, 'images');
-//   },
-//   filename: function(req, file, cb) {   
-//       cb(null, uuidv4() + '-' + Date.now() + path.extname(file.originalname));
-//   }
-// });
-
-// const ff = (req, file, cb) => {
-//   const allowedFileTypes = ['image/jpeg', 'image/jpg', 'image/png'];
-//   if(allowedFileTypes.includes(file.mimetype)) {
-//       cb(null, true);
-//   } else {
-//       cb(null, false);
-//   }
-// }
-
-// let picUploaded = multer({ stor, ff });
-
-
-
-
+      
 
 /**
  * 
- * Profile
+ * User Profile
  * 
  */
 router.put("/all/users/:userid", async (req, res) => {
@@ -134,39 +47,86 @@ router.get("/all/users/:userid", async (req, res) => {
   }
 });
 
-module.exports = router;
+  /**
+         * 
+         * Profile Image Update
+         */
+
+        app.use(cors())
+
+        var storage = multer.diskStorage({
+          destination: function (req, file, cb) {
+          cb(null, "../client/public/uploads/profile/")
+        },
+        filename: function (req, file, cb) {
+          cb(null, file.originalname )
+        }
+        })
+        
+        
+        var upload = multer({ storage: storage }).single('file')
+        router.put('/all/users/:userid/upload',async function(req, res) {
+          
+          // console.log(pic_url);
+          upload(req, res, async function (err) {
+          const user = await User.findById(req.params.userid);
+          if (!user) return res.json({ msg: "user no found" });
+          const pic_url ="http://localhost:3000/uploads/profile/" + res.req.file.filename;
+          // user.findByIdAndUpdate(req.params.userid, {pic : pic_url});
+          Object.assign(user, {pic : pic_url});
+        
+          await user.save();
+         
+          // Object.assign(user, pic_url);
+          // user.pic = pic_url;
+          console.log(pic_url);
+          
+                 if (err instanceof multer.MulterError) {
+                     return res.status(500).json(err)
+                 } else if (err) {
+                     return res.status(500).json(err)
+                 }
+            return res.status(200).send(req.file)
+        
+          })
+        
+        });
+        
+
+        
+
 
 
 /** =================================== 
  *             UPLOAD IMAGES 
  * ======================================/
  **/
-// let storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//       cb(null, "../client/public/uploads/");
-//   },
-//   filename: (req, file, cb) => {
-//       cb(null, `${Date.now()}_${file.originalname}`);
-//   },
-//   fileFilter: (req, file, cb) => {
-//       const ext = path.extname(file.originalname)
-//       if (ext !== '.jpg' && ext !== '.png' && ext !== '.mp4') {
-//           return cb(res.status(400).end('only jpg, png, mp4 is allowed'), false);
-//       }
-//       cb(null, true)
-//   }
-// });
+let stor = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, "../client/public/uploads/");
+  },
+  filename: (req, file, cb) => {
+      cb(null, `${Date.now()}_${file.originalname}`);
+  },
+  fileFilter: (req, file, cb) => {
+      const ext = path.extname(file.originalname)
+      if (ext !== '.jpg' && ext !== '.png' && ext !== '.mp4') {
+          return cb(res.status(400).end('only jpg, png, mp4 is allowed'), false);
+      }
+      cb(null, true)
+  }
+});
 
-// const upload = multer({ storage: storage }).single("file");
+const upl = multer({ storage: stor }).single("file");
 
-// router.post("/uploadfiles", (req, res) => {
-//     upload(req, res, err => {
-//         if (err) {
-//             return res.json({ success: false, err });
-//         }
-//         return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename });
-//     });
-// });
+router.post("/uploadfiles", (req, res) => {
+    upl(req, res, err => {
+        if (err) {
+            return res.json({ success: false, err });
+        }
+        return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename });
+    });
+});
 
 
 
@@ -180,8 +140,9 @@ router.post("/ask", verify, async (req, res) => {
   let user_id = req.user;
   let title = req.body.qst_title;
   let content = req.body.qst_content;
-  let tags = req.body.tags
+  let tags = await req.body.newtag;
 
+  // console.log(tags);
   if (!title || !content)
     return res.status(400).json({ msg: "Not all fields have been entered." });
 
@@ -193,12 +154,13 @@ router.post("/ask", verify, async (req, res) => {
     qst_title: title,
     username: result.username,
     qst_content: content,
-    qst_tags: tags
+    tags: tags,
   });
 
   try {
     const savedQuestion = await question.save();
     res.send({ question_id: question._id });
+    console.log(savedQuestion.tags);
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }
@@ -210,8 +172,7 @@ router.get("/all", async (req, res) => {
         .populate("user")
         .exec((err, questions) => {
             if (err) return  res.status(500).send(err);
-            res.status(200).json(questions);
-            
+            res.status(200).json(questions);            
         });
        
 });
@@ -612,7 +573,6 @@ router.put(
     }
   }
 );
-
 
 router.get('/questions/user/:id',verify,async (req,res)=>{
     try{

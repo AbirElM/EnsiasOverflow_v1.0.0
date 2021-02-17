@@ -58,7 +58,6 @@ export default function UserList() {
       const { fileName, filePath } = res.data;
       setUploadedFile({ fileName, filePath });
       message.success("Profile updated successfully");
-
       setMessage('File Uploaded');
       console.log(message);
     } catch (err) {
@@ -71,6 +70,7 @@ export default function UserList() {
       console.log(message);
 
       }
+      window.location.reload();
     }
   }
   /**

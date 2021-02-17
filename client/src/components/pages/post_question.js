@@ -1,4 +1,4 @@
-import React, { useState, useContext, Fragment } from "react";
+import React, { useState, useContext, useEffect, Fragment } from "react";
 
 import UserContext from "../../context/UserContext";
 import Axios from "axios";
@@ -8,7 +8,7 @@ import SuccessNotice from "../misc/SuccessNotice";
 import ChipInput from "material-ui-chip-input";
 import QuillEditor from "./editor/QuillEditor";
 import { message } from "antd";
-import underscore from "underscore"
+import underscore from "underscore";
 export default function Post_question() {
   const userData = useContext(UserContext);
 
@@ -18,34 +18,34 @@ export default function Post_question() {
   const onFilesChange = (files) => {
     setFiles(files);
   };
-  
-  
+
   const [files, setFiles] = useState([]);
   const [qst_title, setTitle] = useState();
   const [qst_content, setContent] = useState();
 
-
   const [error, setError] = useState();
 
- 
   const [success, setSuccess] = useState();
-  const [tags,setTags]=useState([])
-  console.log('tags' + tags)
+  const [tags, setTags] = useState([]);
+  const [newtag, setNewtag] = useState([]);
+
+  
   // Add Chips
   const handleAddChip = (chip) => {
-    
-    setTags(...tags,chip)
-    
-  }
+    // setTags(tags,chip);
+    setTags((tags) => [...tags, chip]);
+    const obj = {tag: chip}
+    setNewtag(newtag.concat(obj));
+    // console.log(chip);
+    console.log(newtag);
+  };
   // Delete Chips
   const handleDeleteChip = (chip) => {
-     setTags(
-        underscore.without(tags, chip)
-     );
-  }
+    setTags(underscore.without(tags, chip));
+  };
 
   const submit = async (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     try {
       const token = userData.userData.token;
       if (token == undefined) {
@@ -56,7 +56,7 @@ export default function Post_question() {
       const newQuestion = {
         qst_title,
         qst_content,
-        tags
+        newtag,
       };
 
       const postres = await Axios.post("/posts/ask", newQuestion, {
@@ -66,7 +66,6 @@ export default function Post_question() {
       if (postres) {
         // setSuccess("Question posted successfully !");
         message.success("Post Created!");
-
         setTimeout(() => {}, 2500);
       }
     } catch (err) {
@@ -108,11 +107,21 @@ export default function Post_question() {
               </small>
             </div>
             <ChipInput
-                label="IT Tags"
-                defaultValue={tags}
-                onAdd={(chip) => handleAddChip(chip)}
-                onDelete={(chip, index) => handleDeleteChip(chip, index)}
+              value={tags}
+              label="IT Tags"
+              defaultValue={["question", "tags", "here"]}
+              onAdd={(chip) => handleAddChip(chip)}
+              onDelete={(chip, index) => handleDeleteChip(chip, index)}
             />
+            <div>
+              {" "}
+              Tags :{" "}
+              <p>
+                {tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </p>
+            </div>
             <div className="form-group">
               <label for="">Content</label>
 

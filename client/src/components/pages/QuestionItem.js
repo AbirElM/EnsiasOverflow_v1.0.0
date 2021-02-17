@@ -5,18 +5,18 @@ import "font-awesome/css/font-awesome.min.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../../context/UserContext";
-import {message} from "antd"; 
-import moment from 'moment'
+import { message } from "antd";
+import moment from "moment";
 
 function QuestionItem({ qst }) {
   /**
    * Here we Initialize the states with the Number values :
    *  Like & dislike which we call in the render method
    */
-  const dt = new Date(Date.now-qst.asked_date)
+  const dt = new Date(Date.now - qst.asked_date);
   const [like, setlikes] = useState([qst.qst_likes.length]);
   const [dislike, setdislikes] = useState([qst.qst_dislikes.length]);
-  const userData = useContext(UserContext)
+  const userData = useContext(UserContext);
   //   useEffect(() => {
   //     axios.get('h')
   //     .then(res => {setQsts(res.data) })
@@ -32,16 +32,15 @@ function QuestionItem({ qst }) {
   //     .catch((err) => console.log(err));
   // }, []);
 
+  
 
   const handleLike = (id) => {
     // const id = _id;
     const token = userData.userData.token;
     if (token == undefined) {
-      message.error('You must be logged in to perform this action.');
+      message.error("You must be logged in to perform this action.");
 
-      setTimeout(() => {
-         
-      }, 2500);
+      setTimeout(() => {}, 2500);
     }
 
     axios
@@ -78,29 +77,38 @@ function QuestionItem({ qst }) {
 
   return (
     <Fragment>
-      <Card style={{ width: "70vw" ,borderColor:'black', margin:'5px'}}>
+      <Card style={{ width: "70vw", borderColor: "black", margin: "5px" }}>
         <Card.Body>
           <Card.Title>{qst.qst_title}</Card.Title>
-          
+
           <Card.Subtitle className="mb-2 text-muted">
             By :<Card.Link href="#LinktoUser"> {qst.user.username} </Card.Link>
           </Card.Subtitle>
           <Card.Subtitle className="mb-1 text-muted">
             {" "}
             On : {qst.asked_date.substring(0, 10)}{" "}
-           
           </Card.Subtitle>
           <Card.Subtitle className="mb-1 text-muted primary">
             {" "}
-          
-            Asked : {moment(qst.asked_date).fromNow()} 
+            Asked : {moment(qst.asked_date).fromNow()}
           </Card.Subtitle>
-          <Card.Text>
-          <div dangerouslySetInnerHTML={{__html: qst.qst_content }}>
-          
-          </div>
+        
          
-          
+
+          <Card.Text>
+            <div dangerouslySetInnerHTML={{ __html: qst.qst_content }}></div>
+          </Card.Text>
+
+          <Card.Text>
+            <div className="tag_chip">
+
+            <ul>
+                {qst.tags.map((tag) => (
+                  <li>{tag.tag}</li>
+                ))}
+            </ul>
+
+            </div>
           </Card.Text>
           <div className="ml-auto">
             <button
@@ -124,19 +132,32 @@ function QuestionItem({ qst }) {
               <i className="fa fa-thumbs-down"></i>{" "}
               {qst.qst_dislikes.length > 0 && <span> {dislike}</span>}
             </button> */}
-            <Link to={`/posts/all/question/${qst._id}`} 
-            className="btn btn-outline-success margin"
-           >
+            <Link
+              to={`/posts/all/question/${qst._id}`}
+              className="btn btn-outline-success margin"
+            >
               View answers{" "}
               {qst.responses.length > 0 && (
                 <span className="comment-count">{qst.responses.length}</span>
               )}
             </Link>
+         
+              <Button
+                className=" ml-1 "
+                value="Spam"
+                variant="outline-warning"
+              >
+                {" "}
+                Spam
+              </Button>
+            <div className="d-flex p-2 bd-highlight" >
+           
+            </div>
           </div>
         </Card.Body>
       </Card>
       <>
-      <br></br>
+        <br></br>
       </>
     </Fragment>
   );
