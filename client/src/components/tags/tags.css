@@ -1,0 +1,14 @@
+.tags{
+    height: 100vh;
+    width: 100vh;
+    display: flex;
+
+}
+.tag{
+    background-color: beige;
+    outline: none;
+    border-radius: 5px;
+    width: 7%;
+    height: 30px;
+    margin : 0 5px
+}

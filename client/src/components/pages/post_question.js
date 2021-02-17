@@ -45,7 +45,7 @@ export default function Post_question() {
   };
 
   const submit = async (e) => {
-    // e.preventDefault();
+    e.preventDefault();
     try {
       const token = userData.userData.token;
       if (token == undefined) {
@@ -59,11 +59,19 @@ export default function Post_question() {
         newtag,
       };
 
-      const postres = await Axios.post("/posts/ask", newQuestion, {
+      const postres = await Axios.post("/posts/ask/", newQuestion, {
         headers: { "auth-token": userData.userData.token },
       });
-
+      console.log('qst id is'+postres.data)
+      const id = postres.data
+      await newtag.forEach((tg)=>{
+        const tag = tg.tag
+        console.log(tag)
+        const ntag={tag}
+         Axios.post(`/tags/addtag/${id}`,ntag)
+      })
       if (postres) {
+        
         // setSuccess("Question posted successfully !");
         message.success("Post Created!");
         setTimeout(() => {}, 2500);

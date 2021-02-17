@@ -102,9 +102,11 @@ function QuestionItem({ qst }) {
           <Card.Text>
             <div className="tag_chip">
 
-            <ul>
+            <ul className='pagination'>
                 {qst.tags.map((tag) => (
-                  <li>{tag.tag}</li>
+                  <li className='page-item' key={tag._id}>
+                    <p className="page-link">{tag.tag}</p>
+                  </li>
                 ))}
             </ul>
 
