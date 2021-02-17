@@ -5,12 +5,6 @@ const QuestionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
-  tags: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "tag",
-    },
-  ],
   username: {
     type: String,
     required: "true",
@@ -80,13 +74,8 @@ const QuestionSchema = new mongoose.Schema({
   ],
   tags:[
     {
-      tag:{
         
           type: String,
-          required: true
-
-        
-      }
     }
   ],
   asked_date: {

@@ -29,12 +29,13 @@ export default function Post_question() {
 
  
   const [success, setSuccess] = useState();
-  const [tags,setTags]=useState()
-
+  const [tags,setTags]=useState([])
+  console.log('tags' + tags)
   // Add Chips
   const handleAddChip = (chip) => {
     
     setTags(...tags,chip)
+    
   }
   // Delete Chips
   const handleDeleteChip = (chip) => {
@@ -108,7 +109,7 @@ export default function Post_question() {
             </div>
             <ChipInput
                 label="IT Tags"
-                value={tags}
+                defaultValue={tags}
                 onAdd={(chip) => handleAddChip(chip)}
                 onDelete={(chip, index) => handleDeleteChip(chip, index)}
             />

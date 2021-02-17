@@ -86,14 +86,14 @@ const QuestionList = () => {
       
         <div className='col-lg container'>
           <div class="input-group md-form form-sm form-2 pl-0 head row">
-            {/* <input
+            <input
               class="form-control my-0 py-1 red-border"
               type="text"
               placeholder="Search"
               aria-label="Search"
               placeholder="Search..."
               onChange={(Event) => setSearchItem(Event.target.value)}
-            /> */}
+            /> 
           <div class="input-group-append">
             {/* <span class="input-group-text red lighten-3" id="basic-text1">
               <i aria-hidden="true">
