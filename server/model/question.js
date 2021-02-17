@@ -5,11 +5,12 @@ const QuestionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "user",
   },
- tags:[ 
-    { 
-          type: String,
-          required: true  ,
-            
+  tags: [
+    {
+      tag: {
+        type: String,
+        required: true,
+      }
     }
   ],
 
@@ -79,17 +80,6 @@ const QuestionSchema = new mongoose.Schema({
         default: Date.now,
       },
     },
-  ],
-  tags:[
-    {
-      tag:{
-        
-          type: String,
-          required: true
-
-        
-      }
-    }
   ],
   asked_date: {
     default: Date.now,

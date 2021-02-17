@@ -130,7 +130,7 @@ router.post("/ask", verify, async (req, res) => {
   let user_id = req.user;
   let title = req.body.qst_title;
   let content = req.body.qst_content;
-  let tags = await req.body.newtag;
+  let tags =  req.body.newtag;
 
   // console.log(tags);
   if (!title || !content)
@@ -149,10 +149,9 @@ router.post("/ask", verify, async (req, res) => {
 
   try {
     const savedQuestion = await question.save();
-    // res.send({ savedQuestion: savedQuestion });
-    res.json(savedQuestion);
-    console.log(savedQuestion);
+    res.send(savedQuestion._id);
   } catch (err) {
+    console.log(err)
     res.status(500).json({ msg: err.message });
   }
 });

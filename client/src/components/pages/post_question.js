@@ -58,11 +58,19 @@ export default function Post_question() {
         newtag,
       };
 
-      const postres = await Axios.post("/posts/ask", newQuestion, {
+      const postres = await Axios.post("/posts/ask/", newQuestion, {
         headers: { "auth-token": userData.userData.token },
       });
-
+      console.log('qst id is'+postres.data)
+      const id = postres.data
+      await newtag.forEach((tg)=>{
+        const tag = tg.tag
+        console.log(tag)
+        const ntag={tag}
+         Axios.post(`/tags/addtag/${id}`,ntag)
+      })
       if (postres) {
+        
         // setSuccess("Question posted successfully !");
         message.success("Post Created!");
         setTimeout(() => {}, 2500);
@@ -112,9 +120,17 @@ export default function Post_question() {
               onAdd={(chip) => handleAddChip(chip)}
               onDelete={(chip, index) => handleDeleteChip(chip, index)}
             />
-           
+            <div>
+              {" "}
+              Tags :{" "}
+              <p>
+                {tags.map((tag) => (
+                  <li>{tag}</li>
+                ))}
+              </p>
+            </div>
             <div className="form-group">
-              <label for="" className="mt-3">Content</label>
+              <label for="">Content</label>
 
               <div id="ql-editor">
                 <QuillEditor

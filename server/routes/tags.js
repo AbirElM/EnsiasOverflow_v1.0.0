@@ -8,31 +8,35 @@ const verify = require("../routes/verifyToken");
 const { findById } = require("../model/user");
 const multer = require("multer");
 
-router.post("/addtag", (req, res) => {
+router.post("/addtag/:qstid", (req, res) => {
   // let user_id = req.user;
   const Tag = new tag({
-    tagName: req.body.tagName,
-    tagDescription: req.body.tagDesc,
+    tag: req.body.tag,
+    question:req.params.qstid
+    
   });
   try {
     Tag.save();
     res.json({
        tag_id: Tag._id,
-       tagName: Tag.tagName,
-       desc: Tag.tagDescription,
+      
     });
   } catch (err) {
     res.status(500).json({ msg: err.message });
   }
 });
 
-router.get("all",(req,res)=>{
-    tag.find()
-    .populate("user")
-    .exec((err, questions) => {
-        if (err) return  res.status(500).send(err);
-        res.status(200).json(questions);        
-    });
+router.get("/all", async (req,res)=>{
+     await tag.find().distinct("tag").exec((err, tags) => {
+         if (err) return  res.status(500).send(err);
+         res.status(200).json(tags);        
+     });
+    // try{
+    //   const tags = await tag.find()
+    //   res.status(200).send(tags)
+    // }catch(err){
+    //   res.status(500).send({msg: err})
+    // }
 })
 
 module.exports = router;
