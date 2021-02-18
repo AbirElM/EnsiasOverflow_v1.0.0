@@ -92,6 +92,7 @@ export default function Post_question() {
               <SuccessNotice
                 message={success}
                 clearError={() => setSuccess(undefined)}
+                
               />
             )}
 
