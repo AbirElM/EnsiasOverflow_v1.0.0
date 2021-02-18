@@ -47,7 +47,7 @@ const ResponseForm = ({ id }) => {
     <Fragment>
       <div className="container">
         <form onSubmit={submit}>
-          <h4 className="label text-primary"> Your answer! </h4>
+          <h4 style={{color:"#138496"}} > Add your answer ! </h4>
           {error && (
             <>
               <ErrorNotice
@@ -72,12 +72,13 @@ const ResponseForm = ({ id }) => {
                     placeholder="Start Posting Something"
                     onEditorChange={onEditorChange}
                     onFilesChange={onFilesChange}
+                    
                     // onFilesChange={onFilesChange}
 
                   />
                 </div>
                 
-          <button type="submit" className="btn btn-primary">
+          <button type="submit" className="btn btn-info">
             Post your answer
           </button>
         </form>

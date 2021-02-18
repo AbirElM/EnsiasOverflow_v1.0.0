@@ -1,5 +1,7 @@
 import React, { Fragment, useEffect, useState, useContext } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 import UserContext from "../../context/UserContext";
 import { Typography } from "antd";
 import Card from "react-bootstrap/Card";
@@ -40,7 +42,7 @@ function UserDetail({ match }) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const del_qst = async (e,qst_id) => {
+  const del_qst = async (e, qst_id) => {
     e.preventDefault();
     try {
       const res = await axios.delete(
@@ -49,17 +51,15 @@ function UserDetail({ match }) {
           headers: {
             "auth-token": userData.userData.token,
           },
-
-        },
+        }
       );
       console.log(res);
       setShow(false);
       message.success("Successfully deleted !");
       setTimeout(() => {}, 2000);
       window.location.reload();
-
     } catch (error) {
-        message.error(error);
+      message.error(error);
     }
   };
 
@@ -101,19 +101,17 @@ function UserDetail({ match }) {
           >
             <Card
               style={{
-                width: "70vh",
+                width: "120rem",
                 justifyContent: "center",
                 margin: "15px",
+                backgroundColor: "#F1F2F3",
               }}
               className={classes.root}
             >
               <Card.Body>
                 <div className="row">
                   <div className="col-lg-4">
-                    <Card.Img
-                      src={user.pic}
-                      style={{ width: "100px", height: "100px" }}
-                    />
+                    <Card.Img src={user.pic} style={{ width: "100px" }} />
                   </div>
                   <div className="col-lg-8">
                     <Card.Title>
@@ -138,7 +136,6 @@ function UserDetail({ match }) {
 
             <div
               style={{
-                width: "100%",
                 height: "2px",
                 margin: "10px auto",
                 background: "grey",
@@ -149,70 +146,90 @@ function UserDetail({ match }) {
               style={{
                 display: "flex",
                 flexWrap: "wrap",
-                justifyContent: "center",
+                justifyContent: "space-evenly",
               }}
             >
               {questions.map((value, key) => (
-                <Card
-                  style={{
-                    width: "25%",
-                    padding: "10px",
-                    cursor: " pointer",
-                    margin: "5px",
-                    padding: "30px",
-                    color: "gray",
-                    borderColor: "black",
-                  }}
-                >
-                  {/* 
+                <>
+                  <Card
+                    className={classes.root}
+                    style={{
+                      width: "90rem",
+                      cursor: " pointer",
+                      margin: "5px",
+                      backgroundColor: "#F1F2F3",
+                    }}
+                  >
+                    {/* 
             _______ Model Changes_____ */}
-                  <>
-                    <Modal show={show} onHide={handleClose} animation={false}>
-                      <Modal.Body>
-                        Are you sure you want to delete this post ?
-                      </Modal.Body>
-                      <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                          Cancel
-                        </Button>
-                        <Button variant="danger" 
-                        // onChange={(e) => onChange(e)}
-                        onClick={(e)=> del_qst(e,value._id)}>
-                          Delete
-                        </Button>
-                      </Modal.Footer>
-                    </Modal>
-                  </>
+                    <>
+                      <Modal show={show} onHide={handleClose} animation={true}>
+                        <Modal.Body>
+                          Are you sure you want to delete this post ?
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button variant="secondary" onClick={handleClose}>
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="danger"
+                            // onChange={(e) => onChange(e)}
+                            onClick={(e) => del_qst(e, value._id)}
+                          >
+                            Delete
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
+                    </>
 
-                  <Card.Body>
-                    <Card.Text> {value._id}</Card.Text>
-                    <Card.Text>{value.qst_likes.lenght}</Card.Text>
-                    <Card.Text>{value.qst_title}</Card.Text>
+                    <Card.Header
+                      style={{ backgroundColor: "#edf3fa", height: "6rem" }}
+                    >
+                      <Title level={5}>{value.qst_title} </Title>
+                    </Card.Header>
 
-                    <Card.Text style={{ color: "green" }}>
-                      Asked on :{value.asked_date.substring(0, 10)}
-                    </Card.Text>
+                    <Card.Body>
+                      {/* <Card.Text> {value._id}</Card.Text> */}
 
-                    {userData.userData.user == match.params.id ? (
-                      <>
-                        <Button
-                          className="btn-danger ml-1"
-                          value="Delete"
-                          onClick={handleShow}
-                        >
-                          {" "}
-                          Delete
-                        </Button>
-                        <Button className="btn-info ml-1" value="Edit">
-                          {" "}
-                          Edit
-                        </Button>
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                  </Card.Body>
-                </Card>
+                      <Link
+                        to={`/posts/all/question/${value._id}`}
+                        className="btn btn-outline-success margin"
+                      >
+                        View{" "}
+                      </Link>
+
+                      <Card.Text style={{ color: "grey" }}>
+                        Asked on :{value.asked_date.substring(0, 10)}
+                      </Card.Text>
+                      <Card.Text style={{ color: "green" }}>
+                        <i className="fa fa-thumbs-up">{"  "}</i>
+                        {value.qst_likes.length > 1 ? (
+                          <>{"  " + value.qst_likes.length} upvotes </>
+                        ) : (
+                          <>{" " + value.qst_likes.length} upvote</>
+                        )}
+                      </Card.Text>
+                      {userData.userData.user == match.params.id ? (
+                        <>
+                          <Button
+                            className="btn-danger ml-1"
+                            value="Delete"
+                            onClick={handleShow}
+                          >
+                            {" "}
+                            Delete
+                          </Button>
+                          <Button className="btn-info ml-1" value="Edit">
+                            {" "}
+                            Edit
+                          </Button>
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                    </Card.Body>
+                  </Card>
+                </>
               ))}
             </div>
           </div>

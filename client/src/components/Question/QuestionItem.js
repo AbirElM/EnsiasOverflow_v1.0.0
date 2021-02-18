@@ -3,15 +3,17 @@ import Card from "react-bootstrap/Card";
 import ErrorNotice from "../misc/ErrorNotice";
 import "./style.css";
 import axios from "axios";
-import moment from 'moment'
+import Avatar from "antd/lib/avatar/avatar";
+
+import moment from "moment";
 const spanStyle = {
-  color : 'black'
-}
+  color: "black",
+};
 function QuestionItem({ question }) {
   // console.log(question.user.username);
 
   const [questionAsked, setQuestionAsked] = useState({});
-  const [author, setAuthor] = useState({question});
+  const [author, setAuthor] = useState({ question });
 
   //   const [author, setAuthor] = useState({});
   // const [responses, setResponses] = useState([]);
@@ -19,9 +21,9 @@ function QuestionItem({ question }) {
   useEffect(() => {
     axios
       .get("/posts/" + question)
-      .then(JSON => {
+      .then((JSON) => {
         setQuestionAsked(JSON.data);
-        setAuthor(JSON.data)
+        setAuthor(JSON.data);
         console.log(author);
         // console.log(res.data);
       })
@@ -31,24 +33,23 @@ function QuestionItem({ question }) {
   return (
     <Fragment>
       <h3 className="">{questionAsked.qst_title}</h3>
-      <Card style={{ width: "70vw", borderColor: "black" }}>
+      <Card style={{ width: "70vw", backgroundColor:"#f2f8ff" }}>
         <Card.Body>
           <Card.Subtitle
             className="mb-2 text-muted"
             style={{ display: "flex", justifyContent: "space-between" }}
           >
             <div style={{ display: "flex", justifyContent: "flex-start" }}>
-            Author: 
-              <Card.Link href="#LinktoUser">
-                  {questionAsked.username}
-
-               </Card.Link>
+              Author:
+              <Card.Link href="#LinktoUser">{questionAsked.username}</Card.Link>
+              {/* <Avatar src={questionAsked.user.pic}></Avatar> */}
             </div>
             <div
               className="mb-1 text-muted"
               style={{ display: "flex", justifyContent: "flex-end" }}
             >
-              On : {moment(questionAsked.asked_date).format('LL')}, <span style={spanStyle}>{moment(questionAsked).fromNow()}</span>
+              On : {moment(questionAsked.asked_date).format("LL")},{" "}
+              <span style={spanStyle}>{moment(questionAsked).fromNow()}</span>
             </div>
           </Card.Subtitle>
           <Card.Text>

@@ -130,19 +130,18 @@ Quill.register(VideoBlot);
 class FileBlot extends BlockEmbed {
   static create(value) {
     const prefixTag = document.createElement("span");
-    prefixTag.innerText = "첨부파일 - ";
+    prefixTag.innerText = "";
 
     const bTag = document.createElement("b");
-    //위에 첨부파일 글자 옆에  파일 이름이 b 태그를 사용해서 나온다.
+    
     bTag.innerText = value;
 
     const linkTag = document.createElement("a");
     linkTag.setAttribute("href", value);
-    linkTag.setAttribute("target", "_blank");
+    linkTag.setAttribute("target", value);
     linkTag.setAttribute("className", "file-link-inner-post");
     linkTag.appendChild(bTag);
     //linkTag 이런식으로 나온다 <a href="btn_editPic@3x.png" target="_blank" classname="file-link-inner-post"><b>btn_editPic@3x.png</b></a>
-
     const node = super.create();
     node.appendChild(prefixTag);
     node.appendChild(linkTag);
@@ -369,15 +368,23 @@ class QuillEditor extends React.Component {
       };
       formData.append("file", file);
 
-      axios.post("/api/blog/uploadfiles", formData, config).then((response) => {
+      axios.post("/posts/uploadfiles", formData, config).then((response) => {
         if (response.data.success) {
           const quill = this.reactQuillRef.getEditor();
           quill.focus();
 
           let range = quill.getSelection();
           let position = range ? range.index : 0;
-          quill.insertEmbed(position, "file", response.data.fileName);
+          
+          quill.insertEmbed(position, "file", "http://localhost:3000/uploads/" 
+            + response.data.fileName);
+            
           quill.setSelection(position + 1);
+
+          // quill.insertEmbed(position, "image", {
+          //   src: "http://localhost:3000/uploads/" + response.data.fileName,
+          //   alt: response.data.fileName,
+          // });
 
           if (this._isMounted) {
             this.setState(
@@ -410,8 +417,9 @@ class QuillEditor extends React.Component {
           <button className="ql-bold" />
           <button className="ql-italic" />
           <button className="ql-underline" />
-          <button className="ql-list">L</button>
           <button className="ql-strike" />
+          <button className="ql-list">L</button>
+
           <button className="ql-insertImage">I</button>
           <button className="ql-insertVideo">V</button>
           <button className="ql-insertFile">F</button>
@@ -420,6 +428,8 @@ class QuillEditor extends React.Component {
           <button className="ql-video" />
           <button className="ql-blockquote" />
           <button className="ql-clean" />
+          
+
 
           <select class="ql-color">
             <option value="rgb(0, 0, 0)" />
@@ -438,6 +448,7 @@ class QuillEditor extends React.Component {
             <option value="rgb(102, 185, 102)" />
           </select>
         </div>
+
         <ReactQuill
           ref={(el) => {
             this.reactQuillRef = el;
@@ -446,6 +457,7 @@ class QuillEditor extends React.Component {
           onChange={this.handleChange}
           modules={this.modules}
           formats={this.formats}
+          defaultValue={"Hello"}
           value={this.state.editorHtml}
           placeholder={this.props.placeholder}
         />
@@ -493,7 +505,8 @@ class QuillEditor extends React.Component {
     //   "list",
     'header',
         'bold', 'italic', 'underline', 'strike',
-        'image', 'video', 'file', 'link',"code-block", "video", "blockquote", "clean", "color"
+        'image', 'video', 'file', 'link',"code-block", 
+        "video", "blockquote", "clean", "color", "list", "code"
   ];
 }
 
