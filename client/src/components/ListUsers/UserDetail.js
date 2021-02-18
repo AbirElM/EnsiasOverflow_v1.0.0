@@ -195,7 +195,7 @@ function UserDetail({ match }) {
                         to={`/posts/all/question/${value._id}`}
                         className="btn btn-outline-success margin"
                       >
-                        View {" "}
+                        View{" "}
                       </Link>
 
                       <Card.Text style={{ color: "grey" }}>

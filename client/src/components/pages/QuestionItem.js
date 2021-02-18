@@ -82,7 +82,7 @@ function QuestionItem({ qst }) {
 
   return (
     <Fragment>
-      <Card style={{ width: "70vw", margin: "5px" }}>
+      <Card style={{ width: "82%", margin: "5px" }}>
         <Card.Body>
           <Card.Title>{qst.qst_title}</Card.Title>
 
