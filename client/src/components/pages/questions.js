@@ -16,9 +16,10 @@ import UserList from '../users/UserList'
 import Question from '../Question/Question'
 import Users from '../ListUsers/Users'
 import UserDetail from "../ListUsers/UserDetail";
+import TagDetail from '../tags/TagDetail'
 const inputstyle = {
   marginTop: "40px",
-  width: "70vw",
+  width: "90%",
   height: "40px",
   fontSize: "20px",
   paddingLeft: "10px",
@@ -98,6 +99,7 @@ const Questions = () => {
           <Route path="/posts/all/question/:id" exact component={Question} />
           <Route path="/posts/all/UserslList" exact component={Users} />
           <Route path="/posts/all/UserslList/user/:id" exact component={UserDetail}/>
+           <Route path="/tags/all/tag/:tagname" exact component={TagDetail}/> 
         </Router>
       </div>
      
