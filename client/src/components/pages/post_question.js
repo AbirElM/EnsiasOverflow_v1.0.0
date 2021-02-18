@@ -14,14 +14,16 @@ export default function Post_question() {
 
   const onEditorChange = (value) => {
     setContent(value);
+    console.log(value)
   };
   const onFilesChange = (files) => {
     setFiles(files);
   };
 
+  
   const [files, setFiles] = useState([]);
   const [qst_title, setTitle] = useState();
-  const [qst_content, setContent] = useState();
+  const [qst_content, setContent] = useState("Default text");
 
   const [error, setError] = useState();
 
@@ -135,9 +137,10 @@ export default function Post_question() {
               <div id="ql-editor">
                 <QuillEditor
                   className="ql-editor"
-                  placeholder="Start Posting Something"
+                  // placeholder="Start Posting Something"
                   onEditorChange={onEditorChange}
                   onFilesChange={onFilesChange}
+          
                   // onFilesChange={onFilesChange}
                 />
               </div>

@@ -49,7 +49,7 @@ const ResponseItem = ({ response, questionId }) => {
   };
   return (
     <Fragment>
-      <Card style={{ width: "70vw", margin: "5px", backgroundColor: "#f6ffe0" }}>
+      <Card style={{ width: "70vw", margin: "30px", backgroundColor: "#f8ffe8" }}>
         <Card.Body>
           <Card.Subtitle className="mb-2 text-muted">
             Answered by :
