@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import moment from "moment";
-
+import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
-import { Container, Button } from "react-bootstrap";
-
+import { Button } from "react-bootstrap";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Avatar } from "@material-ui/core";
 
@@ -22,7 +23,7 @@ function TagDetail({ match }) {
       arr.forEach((element, index, array) => {
         qstids.push(element.question);
       });
-      console.log(qstids)
+      console.log(qstids);
       qstids.map((qst_id) => {
         axios
           .get("/posts/" + qst_id)
@@ -36,17 +37,12 @@ function TagDetail({ match }) {
           })
           .catch((err) => console.log("something wromg" + err));
       });
-     setMyTags(arr)
+      setMyTags(arr);
     } catch (err) {
       console.log("catched err" + err);
     }
-   
   }, []);
 
-    
-      
-
-  
   return (
     <div className="container-fluid">
       <div>
@@ -65,12 +61,14 @@ function TagDetail({ match }) {
               backgroundColor: "#f4fdff",
             }}
           >
+            <Card.Header >Tag : {match.params.tagname}</Card.Header>
             <Card.Body>
-              <Card.Title>{match.params.tagname}</Card.Title>
+              <Card.Title></Card.Title>
             </Card.Body>
           </Card>
         </div>
       </div>
+
       <div className="row">
         <div
         // style={{ backgroundSize: "10%" }}
@@ -78,7 +76,21 @@ function TagDetail({ match }) {
           <p style={{ justifyContent: "center", justifyItems: "center" }}>
             <h3 level={2} className="ml-5">
               {" "}
-              Questions associeted {mytags.length} {" "}
+              <div className>
+                <Container>
+                  <Row>
+                    <Col>
+                      <button type="button" className="btn btn-secondary lg-col-10">
+                        Related Questions <span className="badge badge-light"> {qsts.length}</span>
+                        <span className="sr-only">unread messages</span>
+                      </button>
+                    </Col>
+                   
+                  </Row>
+                </Container>
+                <div></div>
+                <div> </div>
+              </div>
             </h3>
           </p>
 
@@ -99,56 +111,61 @@ function TagDetail({ match }) {
           >
             {qsts.map((qst, key) => (
               <Card style={{ width: "70vw", margin: "5px" }}>
-        <Card.Body>
-          <Card.Title>
-            
-           <Link to={'/posts/all/question/'+qst._id}> {qst.qst_title}</Link>
-          </Card.Title>
+                <Card.Body>
+                  <Card.Title>
+                    <Link to={"/posts/all/question/" + qst._id}>
+                      {" "}
+                      {qst.qst_title}
+                    </Link>
+                  </Card.Title>
 
-          <Card.Subtitle className="mb-2 text-muted">
-          <Avatar src={qst.user.pic}></Avatar>
-            By :<Card.Link href={qst.user._id }> {qst.user.username} </Card.Link>
-          </Card.Subtitle>
-          <Card.Subtitle className="mb-1 text-muted">
-            {" "}
-            On : {qst.asked_date.substring(0, 10)}{" "}
-          </Card.Subtitle>
-          <Card.Subtitle className="mb-1 text-muted primary">
-            {" "}
-            Asked : {moment(qst.asked_date).fromNow()}
-          </Card.Subtitle>
-        
-          <Card.Text>
-            <div dangerouslySetInnerHTML={{ __html: qst.qst_content }}></div>
-          </Card.Text>
+                  <Card.Subtitle className="mb-2 text-muted">
+                    <Avatar src={qst.user.pic}></Avatar>
+                    By :
+                    <Card.Link href={qst.user._id}>
+                      {" "}
+                      {qst.user.username}{" "}
+                    </Card.Link>
+                  </Card.Subtitle>
+                  <Card.Subtitle className="mb-1 text-muted">
+                    {" "}
+                    On : {qst.asked_date.substring(0, 10)}{" "}
+                  </Card.Subtitle>
+                  <Card.Subtitle className="mb-1 text-muted primary">
+                    {" "}
+                    Asked : {moment(qst.asked_date).fromNow()}
+                  </Card.Subtitle>
 
-          <Card.Text>
-            <div className="tag_chip">
+                  <Card.Text>
+                    <div
+                      dangerouslySetInnerHTML={{ __html: qst.qst_content }}
+                    ></div>
+                  </Card.Text>
 
-            <ul className='pagination'>
-                {qst.tags.map((tag) => (
-                  <li className='page-item' key={tag._id}>
-                    <p className="page-link">{tag.tag}</p>
-                  </li>
-                ))}
-            </ul>
+                  <Card.Text>
+                    <div className="tag_chip">
+                      <ul className="pagination">
+                        {qst.tags.map((tag) => (
+                          <li className="page-item" key={tag._id}>
+                            <p className="page-link">{tag.tag}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </Card.Text>
+                  <div className="ml-auto">
+                    <button
+                      type="button"
+                      className="btn btn-success mr-2"
+                      // onClick={() => {
+                      //   handleLike(qst._id);
+                      // }}
+                    >
+                      <i className="fa fa-thumbs-up"></i>
 
-            </div>
-          </Card.Text>
-          <div className="ml-auto">
-          
-            <button
-              type="button"
-              className="btn btn-success mr-2"
-              // onClick={() => {
-              //   handleLike(qst._id);
-              // }}
-            >
-            <i className="fa fa-thumbs-up"></i>
-
-              {/* <span> {like} </span> */}
-            </button>
-            {/* <button
+                      {/* <span> {like} </span> */}
+                    </button>
+                    {/* <button
               type="button"
               className="btn btn-danger"
               onClick={() => {
@@ -158,30 +175,30 @@ function TagDetail({ match }) {
               <i className="fa fa-thumbs-down"></i>{" "}
               {qst.qst_dislikes.length > 0 && <span> {dislike}</span>}
             </button> */}
-            <Link
-              to={`/posts/all/question/${qst._id}`}
-              className="btn btn-outline-success margin"
-            >
-              View answers{" "}
-              {qst.responses.length > 0 && (
-                <span className="comment-count">{qst.responses.length}</span>
-              )}
-            </Link>
-         
-              <Button
-                className=" ml-1 "
-                value="Spam"
-                variant="outline-warning"
-              >
-                {" "}
-                Spam
-              </Button>
-            <div className="d-flex p-2 bd-highlight" >
-           
-            </div>
-          </div>
-        </Card.Body>
-      </Card>
+                    <Link
+                      to={`/posts/all/question/${qst._id}`}
+                      className="btn btn-outline-success margin"
+                    >
+                      View answers{" "}
+                      {qst.responses.length > 0 && (
+                        <span className="comment-count">
+                          {qst.responses.length}
+                        </span>
+                      )}
+                    </Link>
+
+                    <Button
+                      className=" ml-1 "
+                      value="Spam"
+                      variant="outline-warning"
+                    >
+                      {" "}
+                      Spam
+                    </Button>
+                    <div className="d-flex p-2 bd-highlight"></div>
+                  </div>
+                </Card.Body>
+              </Card>
             ))}
           </div>
         </div>
