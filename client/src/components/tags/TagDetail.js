@@ -15,6 +15,14 @@ function TagDetail({ match }) {
   const [questions, setQuestions] = useState([]);
   const [qsts, setQsts] = useState([]);
   const qstids = [];
+  const options = {
+    method: 'GET',
+    url: 'https://tagdef.p.rapidapi.com/one.java.json',
+    headers: {
+      'x-rapidapi-key': 'e47d7ac56dmsh6f8ccf2cb89798fp15bac9jsn1c8dc5f60e3e',
+      'x-rapidapi-host': 'tagdef.p.rapidapi.com'
+    }
+  };
 
   useEffect(async () => {
     try {
@@ -35,12 +43,16 @@ function TagDetail({ match }) {
               questions.concat(res.data),
             ]);
           })
-          .catch((err) => console.log("something wromg" + err));
+        
+          
+          .catch((err) => console.log("Something Wrong.." + err));
       });
       setMyTags(arr);
     } catch (err) {
       console.log("catched err" + err);
     }
+
+  
   }, []);
 
   return (
@@ -61,7 +73,8 @@ function TagDetail({ match }) {
               backgroundColor: "#f4fdff",
             }}
           >
-            <Card.Header >Tag : {match.params.tagname}</Card.Header>
+            <Card.Header >Tag : {match.params.tagname}
+            </Card.Header>
             <Card.Body>
               <Card.Title></Card.Title>
             </Card.Body>
@@ -80,9 +93,9 @@ function TagDetail({ match }) {
                 <Container>
                   <Row>
                     <Col>
-                      <button type="button" className="btn btn-secondary lg-col-10">
+                      <button type="button" className="btn btn-outline-info lg-col-10">
                         Related Questions <span className="badge badge-light"> {qsts.length}</span>
-                        <span className="sr-only">unread messages</span>
+                        <span className="sr-only"></span>
                       </button>
                     </Col>               
                   </Row>
