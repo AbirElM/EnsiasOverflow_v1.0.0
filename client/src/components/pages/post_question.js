@@ -126,12 +126,12 @@ export default function Post_question() {
             />
             <div>
               {" "}
-              Tags :{" "}
-              <p>
+              {/* Tags :{" "} */}
+              {/* <p>
                 {tags.map((tag) => (
                   <li>{tag}</li>
                 ))}
-              </p>
+              </p> */}
             </div>
             <div className="form-group">
               <label for="">Content</label>
