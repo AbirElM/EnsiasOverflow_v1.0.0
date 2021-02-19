@@ -1,5 +1,7 @@
 import React, { Fragment, useEffect, useState, useContext } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 import UserContext from "../../context/UserContext";
 import { Typography } from "antd";
 import Card from "react-bootstrap/Card";
@@ -102,7 +104,7 @@ function UserDetail({ match }) {
                 width: "120rem",
                 justifyContent: "center",
                 margin: "15px",
-                backgroundColor: "#ebebff",
+                backgroundColor: "#F1F2F3",
               }}
               className={classes.root}
             >
@@ -144,7 +146,7 @@ function UserDetail({ match }) {
               style={{
                 display: "flex",
                 flexWrap: "wrap",
-                justifyContent: "center",
+                justifyContent: "space-evenly",
               }}
             >
               {questions.map((value, key) => (
@@ -155,7 +157,7 @@ function UserDetail({ match }) {
                       width: "90rem",
                       cursor: " pointer",
                       margin: "5px",
-                      backgroundColor: "#e3e7ff",
+                      backgroundColor: "#F1F2F3",
                     }}
                   >
                     {/* 
@@ -180,19 +182,33 @@ function UserDetail({ match }) {
                       </Modal>
                     </>
 
+                    <Card.Header
+                      style={{ backgroundColor: "#edf3fa", height: "6rem" }}
+                    >
+                      <Title level={5}>{value.qst_title} </Title>
+                    </Card.Header>
+
                     <Card.Body>
                       {/* <Card.Text> {value._id}</Card.Text> */}
-                      <Card.Text>
-                      
-                      Liked {value.qst_likes.length} time
-                      
-                      </Card.Text>
-                      <Card.Text>{value.qst_title}</Card.Text>
 
-                      <Card.Text style={{ color: "green" }}>
+                      <Link
+                        to={`/posts/all/question/${value._id}`}
+                        className="btn btn-outline-success margin"
+                      >
+                        View{" "}
+                      </Link>
+
+                      <Card.Text style={{ color: "grey" }}>
                         Asked on :{value.asked_date.substring(0, 10)}
                       </Card.Text>
-
+                      <Card.Text style={{ color: "green" }}>
+                        <i className="fa fa-thumbs-up">{"  "}</i>
+                        {value.qst_likes.length > 1 ? (
+                          <>{"  " + value.qst_likes.length} upvotes </>
+                        ) : (
+                          <>{" " + value.qst_likes.length} upvote</>
+                        )}
+                      </Card.Text>
                       {userData.userData.user == match.params.id ? (
                         <>
                           <Button
@@ -213,8 +229,6 @@ function UserDetail({ match }) {
                       )}
                     </Card.Body>
                   </Card>
-
-                  
                 </>
               ))}
             </div>
