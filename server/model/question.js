@@ -85,5 +85,6 @@ const QuestionSchema = new mongoose.Schema({
     default: Date.now,
     type: Date,
   },
+  
 });
 module.exports = mongoose.model("question", QuestionSchema);

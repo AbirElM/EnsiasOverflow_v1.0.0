@@ -18,15 +18,11 @@ function TagDetail({ match }) {
   useEffect(async () => {
     try {
       const tags = await axios.get("/tags/all/tag/" + match.params.tagname);
-      // const obj = {tag: tags.data}
-      // console.log(tags.data);
-      const arr = tags.data;
-      // const arr = [{x:100}, {x:200}, {x:300}];
+      var arr = tags.data;
       arr.forEach((element, index, array) => {
         qstids.push(element.question);
       });
-      console.log(qstids);
-
+      console.log(qstids)
       qstids.map((qst_id) => {
         axios
           .get("/posts/" + qst_id)
@@ -40,49 +36,17 @@ function TagDetail({ match }) {
           })
           .catch((err) => console.log("something wromg" + err));
       });
-
-      // const obj_qst = axios
-      //   .get("/posts/" + qstids[0])
-      //   .then((res) => {
-      //     // qsts.push(res.data);
-      //     console.log(res.data);
-      //   })
-      //   .catch((err) => console.log("something wromg" + err));
-      // console.log(qstids); // 0, 1, 2
-
-      // console.log(obj)
-      // const obj = {tag: tags.data}
-      // setMyTags((mytags)=> [...mytags, obj])
-      // console.log(mytags)
-      // await qst.map(tag=>{
-      //   setQuestions(questions=>[...questions,questions.concat(tag.question)])
-      //   console.log("question is"+tag.question)
-      // })
+     setMyTags(arr)
     } catch (err) {
       console.log("catched err" + err);
     }
-    // const fqsts = getQuestions();
-    // console.log(fqsts);
+   
   }, []);
 
-  const getQuestions = async () => {
-    try {
-      await qstids.forEach((qst, index, array) => {
-        axios
-          .get("/posts/" + qst)
-          .then((res) => {
-            qsts.push(res.data);
-          })
-          .catch((err) => console.log("something wromg" + err));
-      });
-      console.log(qsts);
-    } catch (err) {
-      console.log(err);
-    }
-    // setQuestions(qsts);
-    return qsts;
-  };
+    
+      
 
+  
   return (
     <div className="container-fluid">
       <div>
@@ -112,10 +76,10 @@ function TagDetail({ match }) {
         // style={{ backgroundSize: "10%" }}
         >
           <p style={{ justifyContent: "center", justifyItems: "center" }}>
-            <h1 level={2} className="ml-5">
+            <h3 level={2} className="ml-5">
               {" "}
-              Questions asked{" "}
-            </h1>
+              Questions associeted {mytags.length} {" "}
+            </h3>
           </p>
 
           <div
@@ -136,7 +100,10 @@ function TagDetail({ match }) {
             {qsts.map((qst, key) => (
               <Card style={{ width: "70vw", margin: "5px" }}>
         <Card.Body>
-          <Card.Title>{qst.qst_title}</Card.Title>
+          <Card.Title>
+            
+           <Link to={'/posts/all/question/'+qst._id}> {qst.qst_title}</Link>
+          </Card.Title>
 
           <Card.Subtitle className="mb-2 text-muted">
           <Avatar src={qst.user.pic}></Avatar>
