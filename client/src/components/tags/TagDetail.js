@@ -84,12 +84,10 @@ function TagDetail({ match }) {
                         Related Questions <span className="badge badge-light"> {qsts.length}</span>
                         <span className="sr-only">unread messages</span>
                       </button>
-                    </Col>
-                   
+                    </Col>               
                   </Row>
                 </Container>
-                <div></div>
-                <div> </div>
+
               </div>
             </h3>
           </p>
