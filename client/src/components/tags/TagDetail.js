@@ -6,34 +6,45 @@ import Card from "react-bootstrap/Card";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 function TagDetail({match}) {
-    const [tags,setTags]= useState()
+  const [mytags, setMyTags] = useState([]);
     const [questions,setQuestions]=useState([])
-    
-    useEffect(async ()=>{
+    const [qsts,setQsts]= useState([])
+    useEffect( async ()=>{
       try{
-       const qsts = await axios.get('/tags/all/tag/'+match.params.tagname)
-        console.log(qsts.data)
-       await setTags(qsts)
-       console.log(tags)
-        getQuestions()
+          const tags= await axios.get('/tags/all/tag/'+match.params.tagname)
+
+          const obj = {tag: tags.data}
+        
+           setMyTags((mytags)=> [...mytags, obj])
+          console.log(mytags)
+          // await mytags.map(tag=>{
+          //   setQuestions(questions=>[...questions,questions.concat(tag.question)])
+          //   console.log("questios are"+tag.question)
+          // })
+         
       }catch(err){
         console.log("catched err"+err)
       }
+      const fqsts=  getQuestions()
+      console.log(fqsts)
       
     },[])
 
     const getQuestions = async ()=>{
       try{
-       await tags.map((tag, key)=>{
+        await mytags.map((tag, key)=>{
 
           axios.get('/posts/'+tag.question).then(res=> {
-            questions.push(res.data);
-            setQuestions(questions)
+            qsts.push(res.data);
+            
           }).catch(err=>console.log('something wromg'+err))
         })
       }catch(err){
-
+        console.log(err)
       }
+      console.log(qsts)
+      setQuestions(qsts)
+      return (qsts)
     }
     return (
       <div className="container-fluid">

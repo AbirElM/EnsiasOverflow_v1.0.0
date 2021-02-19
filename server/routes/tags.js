@@ -41,9 +41,9 @@ router.get("/all", async (req,res)=>{
 })
 
 router.get('/all/tag/:tagname',async (req,res)=>{
-  await tag.find({tag: req.params.tagname}).exec((err, tags) => {
+    await tag.find({tag: req.params.tagname}).exec((err, tags) => {
     if (err) return  res.status(500).send(err);
-    res.status(200).json(tags);        
+    res.status(200).send(tags);        
 });
 })
 module.exports = router;
