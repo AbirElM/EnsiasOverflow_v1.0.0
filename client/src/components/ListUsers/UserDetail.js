@@ -1,5 +1,7 @@
 import React, { Fragment, useEffect, useState, useContext } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
+
 import UserContext from "../../context/UserContext";
 import { Typography } from "antd";
 import Card from "react-bootstrap/Card";
@@ -39,12 +41,14 @@ function UserDetail({ match }) {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  const handleCloseS = () => setShow(false);
+  const handleShowS = () => setShow(true);
+  const [currentUser, setCurrentUser] = useState()
   const del_qst = async (e, qst_id) => {
     e.preventDefault();
     try {
       const res = await axios.delete(
-        "/posts/questions/user/" + userData.userData.user + "/" + qst_id,
+        "/posts/questions/user/" + userData.userData.user + "/" + qst_id+"/admin/"+currentUser._id,
         {
           headers: {
             "auth-token": userData.userData.token,
@@ -63,6 +67,12 @@ function UserDetail({ match }) {
 
   useEffect(async () => {
     try {
+      await axios
+        .get("http://localhost:5000/api/user/userId/" + userData.userData.user, {
+          headers: { "auth-token": localStorage.getItem("auth-token") },
+        })
+        .then((res) => setCurrentUser(res.data))
+        .catch((err) => console.log(err));
       await axios
         .get("http://localhost:5000/api/user/userId/" + match.params.id, {
           headers: { "auth-token": localStorage.getItem("auth-token") },
@@ -102,7 +112,7 @@ function UserDetail({ match }) {
                 width: "120rem",
                 justifyContent: "center",
                 margin: "15px",
-                backgroundColor: "#ebebff",
+                backgroundColor: "#F1F2F3",
               }}
               className={classes.root}
             >
@@ -117,7 +127,7 @@ function UserDetail({ match }) {
                     </Card.Title>
                     <Card.Subtitle>{user.username}</Card.Subtitle>
                     <Card.Subtitle style={{ margin: "2px 0", color: "green" }}>
-                      Total questions :
+                      Total questions : {user.role}
                       <Title level={2}>{questions.length}</Title> questions
                     </Card.Subtitle>
                   </div>
@@ -144,9 +154,10 @@ function UserDetail({ match }) {
               style={{
                 display: "flex",
                 flexWrap: "wrap",
-                justifyContent: "center",
+                justifyContent: "space-evenly",
               }}
             >
+
               {questions.map((value, key) => (
                 <>
                   <Card
@@ -155,7 +166,7 @@ function UserDetail({ match }) {
                       width: "90rem",
                       cursor: " pointer",
                       margin: "5px",
-                      backgroundColor: "#e3e7ff",
+                      backgroundColor: "#F1F2F3",
                     }}
                   >
                     {/* 
@@ -179,20 +190,54 @@ function UserDetail({ match }) {
                         </Modal.Footer>
                       </Modal>
                     </>
+                    <>
+                      <Modal show={show} onHide={handleCloseS} animation={true}>
+                        <Modal.Body>
+                          Are you sure you want to spam this post ?
+                        </Modal.Body>
+                        <Modal.Footer>
+                          <Button variant="secondary" onClick={handleCloseS}>
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="danger"
+                            // onChange={(e) => onChange(e)}
+                            onClick={(e) => del_qst(e, value._id)}
+                          >
+                            Delete
+                          </Button>
+                        </Modal.Footer>
+                      </Modal>
+                    </>
+
+                    <Card.Header
+                      style={{ backgroundColor: "#edf3fa", height: "6rem" }}
+                    >
+                      <Title level={5}>{value.qst_title} </Title>
+                    </Card.Header>
 
                     <Card.Body>
                       {/* <Card.Text> {value._id}</Card.Text> */}
-                      <Card.Text>
-                      
-                      Liked {value.qst_likes.length} time
-                      
-                      </Card.Text>
-                      <Card.Text>{value.qst_title}</Card.Text>
 
-                      <Card.Text style={{ color: "green" }}>
+                      <Link
+                        to={`/posts/all/question/${value._id}`}
+                        className="btn btn-outline-success margin"
+                      >
+                        View{" "}
+                      </Link>
+
+                      <Card.Text style={{ color: "grey" }}>
                         Asked on :{value.asked_date.substring(0, 10)}
                       </Card.Text>
-
+                      
+                      <Card.Text style={{ color: "green" }}>
+                        <i className="fa fa-thumbs-up">{"  "}</i>
+                        {value.qst_likes.length > 1 ? (
+                          <>{"  " + value.qst_likes.length} upvotes </>
+                        ) : (
+                          <>{" " + value.qst_likes.length} upvote</>
+                        )}
+                      </Card.Text>
                       {userData.userData.user == match.params.id ? (
                         <>
                           <Button
@@ -211,10 +256,24 @@ function UserDetail({ match }) {
                       ) : (
                         <></>
                       )}
+                      {currentUser.role === "admin" ? (
+                        <>
+                        <p></p>
+                          <Button
+                            className="btn-danger ml-1"
+                            value="Signaler"
+                            onClick={handleShowS}
+                          >
+                            {" "}
+                            Signaler
+                          </Button>
+                         
+                        </>
+                      ) : (
+                        <></>
+                      )}
                     </Card.Body>
                   </Card>
-
-                  
                 </>
               ))}
             </div>

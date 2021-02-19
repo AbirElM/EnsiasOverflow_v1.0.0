@@ -10,12 +10,22 @@ const fileUpload = require("express-fileupload");
 const app = express();
 const cors = require("cors");
 const question = require("../model/question");
+var bodyParser = require("body-parser");
 
 /**
  *
  * User Profile
  *
  */
+
+ /**
+  * Set the limit of body parser to upload files
+  */
+var bodyParser = require("body-parser");
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+
+
 router.put("/all/users/:userid", async (req, res) => {
   try {
     const user = await User.findById(req.params.userid);
@@ -49,7 +59,7 @@ router.get("/all/users/:userid", async (req, res) => {
  * Profile Image Update
  */
 
-app.use(cors());
+// app.use(cors());
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -86,9 +96,9 @@ router.put("/all/users/:userid/upload", async function (req, res) {
   });
 });
 
-/** ===================================
- *             UPLOAD IMAGES
- * ======================================/
+/** ==========================================
+ *             UPLOAD IMAGES IN POSTS
+ * ===========================================/
  **/
 let stor = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -98,10 +108,11 @@ let stor = multer.diskStorage({
     cb(null, `${Date.now()}_${file.originalname}`);
   },
   fileFilter: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    if (ext !== ".jpg" && ext !== ".png" && ext !== ".mp4") {
-      return cb(res.status(400).end("only jpg, png, mp4 is allowed"), false);
-    }
+    // const ext = path.extname(file.originalname);
+    // if (ext !== ".jpg" && ext !== ".png" && ext !== ".mp4") {
+    //   return cb(res.status(400).end("only jpg, png, mp4 is allowed"), false);
+    // }
+
     cb(null, true);
   },
 });
@@ -130,7 +141,7 @@ router.post("/ask", verify, async (req, res) => {
   let user_id = req.user;
   let title = req.body.qst_title;
   let content = req.body.qst_content;
-  let tags =  req.body.newtag;
+  let tags = req.body.newtag;
 
   // console.log(tags);
   if (!title || !content)
@@ -151,7 +162,7 @@ router.post("/ask", verify, async (req, res) => {
     const savedQuestion = await question.save();
     res.send(savedQuestion._id);
   } catch (err) {
-    console.log(err)
+    console.log(err);
     res.status(500).json({ msg: err.message });
   }
 });
@@ -206,6 +217,7 @@ router.get("/:questionId", async (req, res) => {
       }
       if (err) return res.status(401).send({ nsg: err });
       res.send(question);
+
     });
 });
 
@@ -566,7 +578,7 @@ router.get("/questions/user/:id", verify, async (req, res) => {
 });
 
 router.delete(
-  "/questions/user/:userId/:questionId",
+  "/questions/user/:userId/:questionId/admin/:admin",
   verify,
   async (req, res) => {
     // const qsts = await Question.find({user  : req.params.id});
@@ -575,7 +587,7 @@ router.delete(
     const questionId = req.params.questionId;
     const question = await Question.findById(questionId);
     const user_asking = JSON.stringify(question.user);
-    if (user_deleting_id == user_asking) {
+    if (user_deleting_id == user_asking || user_deleting_id== req.params.admin) {
       try {
         console.log("question: " + question + "\n User : " + question.user);
         Question.findByIdAndRemove(questionId, (err) => {

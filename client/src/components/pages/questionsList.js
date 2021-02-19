@@ -78,24 +78,24 @@ const QuestionList = () => {
     <Fragment>
       <div className="container-fluid">
         <div className="col-lg container">
-          <div class="input-group md-form form-sm form-2 pl-0 head row">
-            <input
-              className="form-control my-0 py-1 red-border mt-lg-4 ml-5"
-              type="text"
-              placeholder="Search"
-              aria-label="Search"
-              placeholder="Search..."
-              onChange={(Event) => setSearchItem(Event.target.value)}
-            />
-            <div class="input-group-append">
-              {/* <span class="input-group-text red lighten-3" id="basic-text1">
-              <i aria-hidden="true">
-              <FontAwesomeIcon icon={faSearch} />
+        
+        <div class="input-group md-form form-sm form-2 pl-0 head mt-5">
+        <input
+          class="form-control my-0 py-1 red-border"
+          type="text"
+          placeholder="Search"
+          aria-label="Search"
+        onChange={(Event) => setSearchItem(Event.target.value)}
+        />
+        <div class="input-group-append">
+          <span class="input-group-text red lighten-3" id="basic-text1">
+            <i aria-hidden="true">
+            <FontAwesomeIcon icon={faSearch}/>
 
-              </i>
-            </span> */}
-            </div>
-          </div>
+            </i>
+          </span>
+        </div>
+      </div>
 
           <div className="row container">
             <h1 className="title md">{filtredQuestions.length} Questions </h1>
@@ -129,6 +129,7 @@ const QuestionList = () => {
                 return qst;
               } else if (
                 qst.qst_title.toLowerCase().includes(searchItem.toLowerCase())
+          
               ) {
                 return qst;
               }
