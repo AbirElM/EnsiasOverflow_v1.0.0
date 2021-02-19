@@ -1,53 +1,88 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
-import axios from 'axios'
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 import Card from "react-bootstrap/Card";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-function TagDetail({match}) {
+
+
+function TagDetail({ match }) {
   const [mytags, setMyTags] = useState([]);
-    const [questions,setQuestions]=useState([])
-    const [qsts,setQsts]= useState([])
-    useEffect( async ()=>{
-      try{
-          const tags= await axios.get('/tags/all/tag/'+match.params.tagname)
+  const [questions, setQuestions] = useState([]);
+  const [qsts, setQsts] = useState([]);
+  const qstids = [];
 
-          const obj = {tag: tags.data}
-        
-           setMyTags((mytags)=> [...mytags, obj])
-          console.log(mytags)
-          // await mytags.map(tag=>{
-          //   setQuestions(questions=>[...questions,questions.concat(tag.question)])
-          //   console.log("questios are"+tag.question)
-          // })
-         
-      }catch(err){
-        console.log("catched err"+err)
-      }
-      const fqsts=  getQuestions()
-      console.log(fqsts)
-      
-    },[])
+  useEffect(async () => {
+    try {
+      const tags = await axios.get("/tags/all/tag/" + match.params.tagname);
+      // const obj = {tag: tags.data}
+      // console.log(tags.data);
+      const arr = tags.data;
+      // const arr = [{x:100}, {x:200}, {x:300}];
+      arr.forEach((element, index, array) => {     
+        qstids.push(element.question);
+      });
+      console.log(qstids);
 
-    const getQuestions = async ()=>{
-      try{
-        await mytags.map((tag, key)=>{
-
-          axios.get('/posts/'+tag.question).then(res=> {
+      qstids.map((qst_id) => {
+         axios
+          .get("/posts/" + qst_id)
+          .then((res) => {
+            console.log(res.data);
             qsts.push(res.data);
-            
-          }).catch(err=>console.log('something wromg'+err))
-        })
-      }catch(err){
-        console.log(err)
-      }
-      console.log(qsts)
-      setQuestions(qsts)
-      return (qsts)
+            setQuestions(questions=>[...questions,questions.concat(res.data)])
+          })
+          .catch((err) => console.log("something wromg" + err));
+      });
+
+
+
+      // const obj_qst = axios
+      //   .get("/posts/" + qstids[0])
+      //   .then((res) => {
+      //     // qsts.push(res.data);
+      //     console.log(res.data);
+      //   })
+      //   .catch((err) => console.log("something wromg" + err));
+      // console.log(qstids); // 0, 1, 2
+
+      // console.log(obj)
+      // const obj = {tag: tags.data}
+      // setMyTags((mytags)=> [...mytags, obj])
+      // console.log(mytags)
+      // await qst.map(tag=>{
+      //   setQuestions(questions=>[...questions,questions.concat(tag.question)])
+      //   console.log("question is"+tag.question)
+      // })
+    } catch (err) {
+      console.log("catched err" + err);
     }
-    return (
-      <div className="container-fluid">
+    // const fqsts = getQuestions();
+    // console.log(fqsts);
+  }, []);
+
+  const getQuestions = async () => {
+    try {
+      await qstids.forEach((qst, index, array) => {
+        axios
+          .get("/posts/" + qst)
+          .then((res) => {
+            qsts.push(res.data);
+          })
+          .catch((err) => console.log("something wromg" + err));
+      });
+      console.log(qsts);
+    } catch (err) {
+      console.log(err);
+    }
+    // setQuestions(qsts);
+    return qsts;
+  };
+
+
+  return (
+    <div className="container-fluid">
       <div>
         <div
           style={{
@@ -61,22 +96,22 @@ function TagDetail({match}) {
               width: "150px",
               justifyContent: "center",
               margin: "15px",
-              backgroundColor: "#ebebff",
+              backgroundColor: "#f4fdff",
             }}
-            
+
           >
             <Card.Body>
-                  <Card.Title>
-                    {match.params.tagname} 
-                  </Card.Title>
+              <Card.Title>{match.params.tagname}</Card.Title>
             </Card.Body>
           </Card>
         </div>
       </div>
       <div className="row">
-        <div style={{ backgroundSize: "70%" }} className="col-lg-12">
+        <div 
+        // style={{ backgroundSize: "10%" }}
+         >
           <p style={{ justifyContent: "center", justifyItems: "center" }}>
-            <h1 level={2}>Questions asked </h1>
+            <h1 level={2} className="ml-5"> {" "} Questions asked </h1>
           </p>
 
           <div
@@ -87,40 +122,43 @@ function TagDetail({match}) {
             }}
           ></div>
 
-          <div style={{display: "flex",flexWrap: "wrap",justifyContent: "center",}}>
-             {questions.map((qst, key) => (
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              justifyContent: "center",
+            }}
+          >
+        
+            {qsts.map((qst, key) => (
+              <Card
+                style={{
+                  width: "60rem",
+                  cursor: " pointer",
+                  margin: "5px",
+                  backgroundColor: "#f4fdff",
+                }}
+              >
+
               
-                <Card
-                  
-                  style={{
-                    width: "90rem",
-                    cursor: " pointer",
-                    margin: "5px",
-                    backgroundColor: "#e3e7ff",
-                  }}
-                >
-               
+                <Card.Body>
+                  <Card.Text>Liked time : {qst.qst_likes.length}</Card.Text>
+                  <Card.Text>
+            <div dangerouslySetInnerHTML={{ __html: qst.qst_content }}></div>
+          </Card.Text>
 
-                  <Card.Body>
-                   
-                    <Card.Text>
-                    Liked  time
-                    </Card.Text>
-                    <Card.Text>{qst.qst_title}</Card.Text>
-                    <Card.Text style={{ color: "green" }}>
-                      Asked on {qst.asked_date}:
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-
-                
-             
-                ))}
+                  <Card.Text>{qst.qst_title}</Card.Text>
+                  <Card.Text style={{ color: "green" }}>
+                    Asked on {qst.asked_date}:
+                  </Card.Text>
+                </Card.Body>
+              </Card>
+            ))}
           </div>
         </div>
       </div>
     </div>
-    )
+  );
 }
 
-export default TagDetail
+export default TagDetail;

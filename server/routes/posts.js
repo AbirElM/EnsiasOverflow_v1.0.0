@@ -217,6 +217,7 @@ router.get("/:questionId", async (req, res) => {
       }
       if (err) return res.status(401).send({ nsg: err });
       res.send(question);
+
     });
 });
 
