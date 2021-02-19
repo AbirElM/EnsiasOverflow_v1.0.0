@@ -265,7 +265,7 @@ function UserDetail({ match }) {
                             onClick={handleShowS}
                           >
                             {" "}
-                            Signaler
+                            Delete
                           </Button>
                          
                         </>
