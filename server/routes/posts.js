@@ -583,11 +583,13 @@ router.delete(
   async (req, res) => {
     // const qsts = await Question.find({user  : req.params.id});
     const user_deleting = await User.findById(req.params.userId);
+    const userAdmin = Json.stringify(req.params.admin)
+    console.log(userAdmin)
     const user_deleting_id = JSON.stringify(user_deleting._id);
     const questionId = req.params.questionId;
     const question = await Question.findById(questionId);
     const user_asking = JSON.stringify(question.user);
-    if (user_deleting_id == user_asking || user_deleting_id== req.params.admin) {
+    if (user_deleting_id == user_asking || user_deleting_id == userAdmin) {
       try {
         console.log("question: " + question + "\n User : " + question.user);
         Question.findByIdAndRemove(questionId, (err) => {

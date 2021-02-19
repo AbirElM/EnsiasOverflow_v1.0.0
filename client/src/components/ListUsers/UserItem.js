@@ -14,16 +14,19 @@ function UserItem(props) {
   const [show, setShow] = useState(false);
   const handleCloseS = () => setShow(false);
   const handleShowS = () => setShow(true);
- const user = userData.userData.user
- console.log("user is"+user)
+  const [nowuser,setNowUser] = useState()
    useEffect(async () => {
     try {
-      await axios
-      .get("http://localhost:5000/api/user/userId/" + userData.userData.user, {
-        headers: { "auth-token": localStorage.getItem("auth-token") },
-      })
-      .then((res) => setCurrentUser(res.data))
-      .catch((err) => console.log(err));
+       setNowUser(props.cuser) 
+      // await axios
+      // .get("http://localhost:5000/api/user/userId/"+ props.id, {
+      //   headers: { "auth-token": localStorage.getItem("auth-token") },
+      // })
+      // .then((res) => {
+      //   const arr = res.data;
+      //   console.log(arr)
+      // })
+      // .catch((err) => console.log(err));
    }catch(err){
      console.log(err)
      }
@@ -51,8 +54,17 @@ function UserItem(props) {
             <Card.Text style={{ fontSize: "10px" }}>
               {props.user.username}
             </Card.Text>
-           
-                       {/* {currentUser.role === "admin" ? (
+            {/* {nowuser.role === 'admin' && props.user.reported === true? (
+              <>
+                <p style={{color:"red"}}>Reported</p>
+              </>):(
+                <>
+                </>
+              
+            )} */}
+         
+{/*            
+                       {props.cuser.role === "admin" ? (
                         <>
                         <p></p>
                           <Button
@@ -67,7 +79,7 @@ function UserItem(props) {
                         </>
                       ) : (
                         <></>
-                      )}  */}
+                      )}   */}
            
           </div>
         </div>

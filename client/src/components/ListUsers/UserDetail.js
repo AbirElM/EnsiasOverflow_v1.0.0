@@ -44,9 +44,11 @@ function UserDetail({ match }) {
   const handleCloseS = () => setShow(false);
   const handleShowS = () => setShow(true);
   const [currentUser, setCurrentUser] = useState()
+ 
   const del_qst = async (e, qst_id) => {
     e.preventDefault();
     try {
+      
       const res = await axios.delete(
         "/posts/questions/user/" + userData.userData.user + "/" + qst_id+"/admin/"+currentUser._id,
         {
@@ -64,6 +66,14 @@ function UserDetail({ match }) {
       message.error(error);
     }
   };
+  const reportUser = async ()=>{
+    try{
+      await axios.put('/user/reportUser/'+user._id).then(res=>{console.log(res.data);
+      setUser(res.data)}).catch(err=>console.log(err))
+    }catch(err){
+      console.log(err)
+    }
+  }
 
   useEffect(async () => {
     try {
@@ -127,9 +137,27 @@ function UserDetail({ match }) {
                     </Card.Title>
                     <Card.Subtitle>{user.username}</Card.Subtitle>
                     <Card.Subtitle style={{ margin: "2px 0", color: "green" }}>
-                      Total questions : {user.role}
-                      <Title level={2}>{questions.length}</Title> questions
+                      
+                     Total questions:{questions.length} 
                     </Card.Subtitle>
+                    {currentUser.role === "admin" && user.reported === false ? (
+                        <>
+                        
+                          <Button
+                            className="btn-warning ml-1 mt-2"
+                            value="report"
+                            onClick={reportUser}
+                          >
+                            {" "}
+                            Report
+                          </Button>
+                         
+                        </>
+                      ) : (
+                        <>
+                         <p style={{color:'red'}}> reported!</p>
+                        </>
+                      )}
                   </div>
                 </div>
               </Card.Body>

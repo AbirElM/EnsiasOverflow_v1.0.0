@@ -5,6 +5,7 @@ const { registerVal, LoginVal } = require("../validation/validation");
 const jwt = require("jsonwebtoken");
 const { validate } = require("../model/user");
 const verify = require("../routes/verifyToken");
+const { object } = require("@hapi/joi");
 
 router.post("/register", async (req, res) => {
   // let { email, password, passwordCheck, username, fname, lname } = req.body;
@@ -60,6 +61,8 @@ router.post("/register", async (req, res) => {
     email: req.body.email,
     password: hashPassword,
     pic: "http://localhost:3000/uploads/profile/avatar.png",
+    role:"user",
+ 
   });
   try {
     /**Try adding new user to the database */
@@ -175,6 +178,21 @@ router.get('/userId/:id',verify,async (req,res)=>{
     res.send(user)
   }catch(err){
     res.status(500).send(err)
+  }
+})
+
+router.put('/reportUser/:user', async (req,res)=>{
+  try{
+    const user =await User.findById(req.params.user)
+    if(!user) return res.send('no use')
+      user.reported = true;
+      console.log(user)
+      Object.assign(user,user)
+       user.save()
+      res.send(user)
+    
+  }catch(err){
+      res.status(500).send(err)
   }
 })
 

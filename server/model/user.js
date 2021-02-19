@@ -41,6 +41,10 @@ const userSchema = new mongoose.Schema({
     role:{
         type : String,
         required: true
+    },
+    reported:{
+        type: Boolean,
+        default :0
     }
 });
 
