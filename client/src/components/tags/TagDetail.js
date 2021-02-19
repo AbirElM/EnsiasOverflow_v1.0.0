@@ -9,26 +9,33 @@ function TagDetail({match}) {
   const [mytags, setMyTags] = useState([]);
     const [questions,setQuestions]=useState([])
     const [qsts,setQsts]= useState([])
-    useEffect( async ()=>{
-      try{
-          const tags= await axios.get('/tags/all/tag/'+match.params.tagname)
-
-          const obj = {tag: tags.data}
-        
-           setMyTags((mytags)=> [...mytags, obj])
+    useEffect( ()=>{
+      const fetchTags= async ()=>{
+        const tags=await  axios.get('/tags/all/tag/'+match.params.tagname)
+          const  tgs= await tags.data
+          setMyTags(tgs)
           console.log(mytags)
-          // await mytags.map(tag=>{
-          //   setQuestions(questions=>[...questions,questions.concat(tag.question)])
-          //   console.log("questios are"+tag.question)
-          // })
-         
-      }catch(err){
-        console.log("catched err"+err)
       }
-      const fqsts=  getQuestions()
-      console.log(fqsts)
+      const fetchQsts= ()=>{
+         mytags.map((tag)=>{
+          axios.get('/posts/'+tag.question).then(res=> {
+            qsts.push(res.data);
+            
+        }).catch(err=>console.log(err))
+        })
+         setQuestions(qsts)
+        console.log(qsts)
+      }
+      if(match.params.tagname){
+        fetchTags()
       
-    },[])
+      }
+      if(qsts !== []){
+        fetchQsts()
+      }
+      
+    
+    },[match.params.tagname, questions])
 
     const getQuestions = async ()=>{
       try{
