@@ -10,35 +10,13 @@ import moment from "moment";
 import Avatar from "antd/lib/avatar/avatar";
 
 function QuestionItem({ qst }) {
-  /**
-   * Here we Initialize the states with the Number values :
-   *  Like & dislike which we call in the render method
-   */
+
   const dt = new Date(Date.now - qst.asked_date);
   const [like, setlikes] = useState([qst.qst_likes.length]);
   const [dislike, setdislikes] = useState([qst.qst_dislikes.length]);
   const userData = useContext(UserContext);
-  // const [profileUrl, setprofileUrl] = useState();
-
-  // setprofileUrl("http://localhost:3000/posts/all/UserslList/user/"+userData.userData.user)
   const url = "http://localhost:3000/posts/all/UserslList/user/";
-  
-  
-  //   useEffect(() => {
-  //     axios.get('h')
-  //     .then(res => {setQsts(res.data) })
-  //     .catch(err => console.log(err))
-  // }, []);
-
-  // useEffect(() => {
-  //   axios
-  //     .get("/posts/like")
-  //     .then((res) => {
-  //       setQsts(res.data);
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, []);
-
+  const tagurl= "/tags/all/tag/"
   const handleLike = (id) => {
     // const id = _id;
     const token = userData.userData.token;
@@ -88,7 +66,7 @@ function QuestionItem({ qst }) {
 
           <Card.Subtitle className="mb-2 text-muted">
           <Avatar src={qst.user.pic}></Avatar>
-            By :<Card.Link href={url + qst.user._id }> {qst.user.username} </Card.Link>
+            <Card.Link href={url + qst.user._id }> {qst.user.username} </Card.Link>
           </Card.Subtitle>
           <Card.Subtitle className="mb-1 text-muted">
             {" "}
@@ -111,7 +89,7 @@ function QuestionItem({ qst }) {
             <ul className='pagination'>
                 {qst.tags.map((tag) => (
                   <li className='page-item' key={tag._id}>
-                    <p className="page-link">{tag.tag}</p>
+                    <Link  to={tagurl+ tag.tag} className="page-link">{tag.tag}</Link>
                   </li>
                 ))}
             </ul>

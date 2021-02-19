@@ -217,6 +217,7 @@ router.get("/:questionId", async (req, res) => {
       }
       if (err) return res.status(401).send({ nsg: err });
       res.send(question);
+
     });
 });
 
@@ -577,7 +578,7 @@ router.get("/questions/user/:id", verify, async (req, res) => {
 });
 
 router.delete(
-  "/questions/user/:userId/:questionId",
+  "/questions/user/:userId/:questionId/admin/:admin",
   verify,
   async (req, res) => {
     // const qsts = await Question.find({user  : req.params.id});
@@ -586,7 +587,7 @@ router.delete(
     const questionId = req.params.questionId;
     const question = await Question.findById(questionId);
     const user_asking = JSON.stringify(question.user);
-    if (user_deleting_id == user_asking) {
+    if (user_deleting_id == user_asking || user_deleting_id== req.params.admin) {
       try {
         console.log("question: " + question + "\n User : " + question.user);
         Question.findByIdAndRemove(questionId, (err) => {
