@@ -48,7 +48,7 @@ function UserDetail({ match }) {
     e.preventDefault();
     try {
       const res = await axios.delete(
-        "/posts/questions/user/" + userData.userData.user + "/" + qst_id+"/admin/"+currentUser._id,
+        "/posts/questions/user/" + userData.userData.user + "/" +qst_id,
         {
           headers: {
             "auth-token": userData.userData.token,

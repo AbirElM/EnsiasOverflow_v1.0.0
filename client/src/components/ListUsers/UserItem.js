@@ -1,9 +1,20 @@
 import React from "react";
+import {  useContext } from "react";
+import UserContext from "../../context/UserContext";
+
 import img from "../../components/images/avatar.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
 import Card from "react-bootstrap/esm/Card";
-function UserItem(props) {
+
+ function UserItem(props) {
+  
+  const userData = useContext(UserContext);
+
+  console.log(userData.userData.user);
+
+  
+
   return (
     <div className="row">
       <Card style={{ width: "100%", margin: "0 5px" }}>

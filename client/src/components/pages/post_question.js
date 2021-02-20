@@ -34,9 +34,10 @@ export default function Post_question() {
   // Add Chips
   const handleAddChip = (chip) => {
     // setTags(tags,chip);
-    setTags((tags) => [...tags, chip]);
-    const obj = {tag: chip}
+    setTags((tags) => [...tags, chip.toLowerCase()]);
+    const obj = {tag: chip.toLowerCase()}
     setNewtag(newtag.concat(obj));
+
     // console.log(chip);
     console.log(newtag);
   };
@@ -66,7 +67,7 @@ export default function Post_question() {
       console.log('qst id is'+postres.data)
       const id = postres.data
       await newtag.forEach((tg)=>{
-        const tag = tg.tag
+        const tag = tg.tag.toLowerCase();
         console.log(tag)
         const ntag={tag}
          Axios.post(`/tags/addtag/${id}`,ntag)
@@ -125,12 +126,12 @@ export default function Post_question() {
             />
             <div>
               {" "}
-              Tags :{" "}
-              <p>
+              {/* Tags :{" "} */}
+              {/* <p>
                 {tags.map((tag) => (
                   <li>{tag}</li>
                 ))}
-              </p>
+              </p> */}
             </div>
             <div className="form-group">
               <label for="">Content</label>

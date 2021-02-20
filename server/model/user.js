@@ -38,10 +38,10 @@ const userSchema = new mongoose.Schema({
     pic : {
         type : String,
     },
-    role:{
-        type : String,
-        required: true
-    }
+    // role:{
+    //     type : String,
+       
+    // }
 });
 
 module.exports = mongoose.model('user',userSchema);
